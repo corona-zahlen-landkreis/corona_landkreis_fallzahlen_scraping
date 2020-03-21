@@ -30,5 +30,5 @@ cases_aachen = int(re.findall(r'[0-9]+', cases_aachen_raw)[0])
 cases_staedteregion_raw  = re.findall(cases_staedteregion_pattern,text)[0]
 cases_staedteregion = int(re.findall(r'[0-9]+', cases_staedteregion_raw)[0])
 
-add_to_database(5334002, status, cases_aachen)
-add_to_database(5334, status, cases_staedteregion)
+add_to_database(05334002, status, cases_aachen)
+add_to_database(05334, status, cases_staedteregion)

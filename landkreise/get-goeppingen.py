@@ -21,4 +21,4 @@ cases_raw = bs.find(text=re.compile(cases_pattern))
 
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
-add_to_database(8117, status, cases)
+add_to_database(08117, status, cases)

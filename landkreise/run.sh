@@ -31,3 +31,4 @@ python get-bayreuth-kreis.py
 python get-goerlitz-kreis.py
 python get-burgenland-kreis.py
 python get-aachen.py
+python get-fulda.py
