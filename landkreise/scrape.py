@@ -8,7 +8,11 @@ import time
 from database_interface import *
 
 def time_stamp():
-    return time.strftime("%Y-%m-%d %H:%M:%S")
+    return time.strftime("%Y-%m-%d")
+
+def extract_case_num(text, prefix):
+    cases_raw = text.split(prefix)[1]
+    return int(re.findall("[0-9]+", cases_raw)[0])   
 
 def scrape(url, community_id, cases_func, date_func = None):
     req = requests.get(url)
