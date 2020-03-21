@@ -21,3 +21,12 @@ python get-unna-kreis.py
 python get-borken-kreis.py
 python get-lippe-kreis.py
 python get-erzgebirgskreis.py
+python get-emsland-kreis.py
+python get-pinneberg-kreis.py
+python get-kleve-kreis.py
+python get-paderborn-kreis.py
+python get-mittelsachsen-kreis.py
+python get-neuulm-kreis.py
+python get-bayreuth-kreis.py
+python get-goerlitz-kreis.py
+python get-burgenland-kreis.py
