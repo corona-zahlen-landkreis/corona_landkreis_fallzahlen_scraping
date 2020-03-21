@@ -14,3 +14,10 @@ python get-rheinneckarkreis-heidelberg.py
 python get-muenchen-stadt.py
 python get-muenchen-kreis.py
 python get-pforzheim-enzkreis.py
+python get-reutlingen-kreis.py
+python get-recklinghausen-kreis.py
+python get-wesel-kreis.py
+python get-unna-kreis.py
+python get-borken-kreis.py
+python get-lippe-kreis.py
+python get-erzgebirgskreis.py
