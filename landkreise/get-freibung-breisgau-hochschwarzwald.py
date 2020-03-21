@@ -30,6 +30,6 @@ status= datetime.datetime.strptime(status_raw, '%d.%m., %H:%M Uhr').strftime("20
 cases_freiburg = data[1][2]
 cases_breisgau_hochschwarzwald = data[1][3]
 
-add_to_database(08311, status, cases_freiburg)
-add_to_database(08315, status, cases_breisgau_hochschwarzwald)
+add_to_database("08311", status, cases_freiburg)
+add_to_database("08315", status, cases_breisgau_hochschwarzwald)
 

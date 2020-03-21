@@ -32,5 +32,5 @@ status_raw = re.findall("Stand .*? 2020",text)[0].replace("\xa0", " ")
 status= datetime.datetime.strptime(status_raw, 'Stand %d. %B %Y').strftime("%Y-%m-%d")
 
 cases = data[1][-1]
-add_to_database(14522, status, cases)
+add_to_database("14522", status, cases)
 

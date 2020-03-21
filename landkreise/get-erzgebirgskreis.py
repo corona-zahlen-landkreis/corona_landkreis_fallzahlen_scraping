@@ -25,4 +25,4 @@ status= datetime.datetime.strptime(status_raw, 'Stand: %d.%m.%Y, %H:%M Uhr').st
 cases_raw = re.findall(cases_pattern,text)[0]
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
-add_to_database(14521, status, cases)
+add_to_database("14521", status, cases)

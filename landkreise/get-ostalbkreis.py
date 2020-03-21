@@ -23,4 +23,4 @@ status_raw = row[1].getText()
 status= datetime.datetime.strptime(status_raw, '%d.%m.%Y').strftime("%Y-%m-%d")
 
 
-add_to_database(08136, status, cases)
+add_to_database("08136", status, cases)

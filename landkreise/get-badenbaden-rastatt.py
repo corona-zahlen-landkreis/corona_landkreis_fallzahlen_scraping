@@ -40,6 +40,6 @@ cases_rastatt = cases_total-cases_badenbaden
 #cases = int(re.findall(r'[0-9]+', cases_raw)[2])
 
 
-add_to_database(08211, status, cases_badenbaden)
-add_to_database(08216, status, cases_rastatt)
+add_to_database("08211", status, cases_badenbaden)
+add_to_database("08216", status, cases_rastatt)
 
