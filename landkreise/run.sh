@@ -8,3 +8,6 @@ python get-schwaebischhall.py
 python get-loerrach.py
 python get-freibung-breisgau-hochschwarzwald.py
 python get-freudenstadt.py
+python get-augsburg-stadt.py
+python get-muenchen-stadt.py
+python get-muenchen-kreis.py
