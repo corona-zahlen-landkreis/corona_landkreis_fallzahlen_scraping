@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -16,7 +18,7 @@ $app = new \Slim\App([
 
 $app->get('/reports[/{id:.*}]', function (Request $request, Response $response, array $args) {
     try {
-        if (is_numeric($args['id'])) {
+        if (isset($args['id']) && is_numeric($args['id'])) {
             $report = ORM::for_table('reports')->find_one($args['id']);
             $jsonData = $report ? $report->as_array() : null;
         } else {
