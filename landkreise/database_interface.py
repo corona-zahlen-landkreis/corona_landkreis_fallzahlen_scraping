@@ -15,4 +15,4 @@ def add_to_database(landkreis, status, cases):
       if status in line:
         break
     else:
-      file.write(status+ ","+str(cases))
+      file.write(status+ ","+str(cases)+"\n")
