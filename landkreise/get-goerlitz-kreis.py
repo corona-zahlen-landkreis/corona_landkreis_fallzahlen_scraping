@@ -35,4 +35,4 @@ status= datetime.datetime.strptime(status_raw, 'Stand: %d. %B %Y, %H Uhr').strft
 
 cases = int(data[1].split(" ",1)[0])
 
-add_to_database("Kreis Görlitz", status, cases)
+add_to_database(14626, status, cases)

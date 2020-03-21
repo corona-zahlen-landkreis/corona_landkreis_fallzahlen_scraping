@@ -24,4 +24,4 @@ status= datetime.datetime.strptime(status_raw, 'Stand %d.%m., %H.%M Uhr').strfti
 cases_raw = re.findall(cases_pattern,text)[0]
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
-add_to_database("Kreis Recklinghausen", status, cases)
+add_to_database(5562, status, cases)

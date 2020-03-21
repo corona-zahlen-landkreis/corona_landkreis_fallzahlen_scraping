@@ -21,4 +21,4 @@ status = datetime.datetime.strptime(status_raw, 'Stand %d.%m.%Y, %H:%M Uhr').str
 cases_raw = bs.find(text=re.compile(cases_pattern))
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
-add_to_database("Stadt Augsburg", status, cases)
+add_to_database(9761, status, cases)

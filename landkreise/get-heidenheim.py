@@ -24,4 +24,4 @@ cases_raw=bs.findAll(text=re.compile("Es gibt aktuell"))[0]
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
 
-add_to_database("Heidenheim", status, cases)
+add_to_database(8135, status, cases)

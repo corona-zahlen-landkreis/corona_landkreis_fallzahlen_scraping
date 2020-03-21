@@ -27,4 +27,4 @@ cases_raw = re.findall(cases_pattern,bs.getText())[0]
 
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
-add_to_database("Heilbronn", status, cases)
+add_to_database(8125, status, cases)
