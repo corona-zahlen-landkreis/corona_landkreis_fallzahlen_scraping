@@ -20,7 +20,7 @@ cases = row[0].getText()
 status_raw = row[1].getText()
 
 #'18.03.2020, 14:30 Uhr' does not match format '%Y-%m-%d %H:%M:%S.%f'
-status= datetime.datetime.strptime(status_raw, '%d.%m.%Y, %H:%M Uhr').strftime("%Y-%m-%d %H:%M:%S")
+status= datetime.datetime.strptime(status_raw, '%d.%m.%Y').strftime("%Y-%m-%d")
 
 
 add_to_database("Ostalbkreis", status, cases)

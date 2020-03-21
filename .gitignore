@@ -1,2 +1,3 @@
 api/vendor
 api/db/database.db
+landkreise/__pycache__/

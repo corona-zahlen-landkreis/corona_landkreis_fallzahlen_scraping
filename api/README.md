@@ -33,4 +33,7 @@ http://localhost:8080/reports
 Method Get
 http://localhost:8080/reports
 
+
+http://localhost:8080/reports/{id}
+
 ```
