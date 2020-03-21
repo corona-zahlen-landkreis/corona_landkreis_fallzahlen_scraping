@@ -9,7 +9,7 @@ locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 
 from database_interface import *
 
-main_url = "https://www.loerrach-landkreis.de/de/Service-Verwaltung/Fachbereiche/Gesundheit/Sachgebiete/Sachgebiet/Corona"
+main_url = "https://www.landkreis-heilbronn.de/informationen-zum-coronavirus.44148.htm"
 
 session = requests.Session()
 
