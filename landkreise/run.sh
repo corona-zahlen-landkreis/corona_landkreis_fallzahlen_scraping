@@ -34,3 +34,4 @@ python get-aachen.py
 python get-fulda.py
 python get-soest.py
 python get-westerwald-kreis.py
+python get-saarbrücken-regionalverband.py
