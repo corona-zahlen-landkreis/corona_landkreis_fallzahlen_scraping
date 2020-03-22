@@ -14,36 +14,51 @@ $ cd public;
 $ php -S localhost:8080
 ```
 
-## Calls:
+## Methods
+
+
+### List Locations
+
+`GET` /api/locations
+
+Optional Params:
+* `q` string - Freeform search query
+
+Optional Params:
+* `per_page` int
+* `page_num` int
 
 ### Create Report
-```
-Method Post:
 
-http://localhost:8080/api/reports
-?community_id=321
-&infected=5
-&cured=5
-&dead=0
-&report_date=2020-03-21,
-&origin=webscraper
-```
+`POST` /api/reports
 
-// List Reports
+Optional Params:
+* `community_id` string
+* `infected` int
+* `cured` int
+* `dead` int
+* `report_date` date (YYYY-MM-DD)
+* `origin` string
 
-```
-Method Get
+### List Reports
 
-http://localhost:8080/api/reports
+`GET` /api/reports
+
+Optional Params:
+* `per_page` int
+* `page_num` int
 
 
-http://localhost:8080/api/reports/{id}
+### Get one Report
 
-```
+`GET` /api/reports/{id}
 
-// List Reports for a Community
-```
-Method Get
-http://localhost:8080/api/communities/{community_id}/reports
 
-```
+### List Community Reports
+
+`GET` /api/communities/{community_id}/reports
+
+
+Optional Params:
+* `per_page` int
+* `page_num` int

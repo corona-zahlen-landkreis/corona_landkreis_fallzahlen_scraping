@@ -26,6 +26,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../bootstrap/database.php';
 require_once __DIR__ . '/../db/idiorm.php';
 
+require_once __DIR__ . '/../db/util/reader.php';
+
 $app = new \Slim\App([
     'settings' => [
         'displayErrorDetails' => true
@@ -47,16 +49,17 @@ $app->add(function ($req, $res, $next) {
 $app->get('/api/locations', function (Request $request, Response $response, array $args) {
     try {
         $query = $request->getParam('q');
-        $model = ORM::for_table('locations');
+
+        $model = \ORM::for_table('locations');
 
         if ($query !== null) {
             $model->where_raw('(community_id LIKE ? OR community LIKE ?)', [$query.'%', '%'.$query.'%']);
         }
 
-        $model->limit(20);
+        Reader::checkPagination($model, $request);
+
         $locations = $model->find_many();
         $jsonData = [];
-
         foreach($locations as $location) {
             $jsonData[] = $location->as_array();
         }
@@ -78,7 +81,9 @@ $app->get('/api/reports[/{id:.*}]', function (Request $request, Response $respon
             $report = $model->find_one($args['id']);
             $jsonData = $report ? $report->as_array() : null;
         } else {
-            $model->limit(50);
+
+            Reader::checkPagination($model, $request);
+
             $reports = $model->find_many();
             $jsonData = [];
 
@@ -121,7 +126,8 @@ $app->get('/api/communities/{community_id}/reports', function (Request $request,
         $model->join('locations', ['rp.community_id', '=', 'loc.community_id'], 'loc');
 
         $model->where_equal('rp.community_id', $args['community_id']);
-        $model->limit(50);
+
+        Reader::checkPagination($model, $request);
 
         $reports = $model->find_many();
         $jsonData = [];
