@@ -33,6 +33,7 @@ $app = new \Slim\App([
 ]);
 
 // TODO: Move this into ../bootstrap/routes
+// TODO: create controllers
 
 // Enable CORS
 $app->add(function ($req, $res, $next) {
@@ -103,11 +104,34 @@ $app->post('/api/reports', function (Request $request, Response $response, array
         $report->cured = $request->getParam('cured');
         $report->dead = $request->getParam('dead');
         $report->report_date = $request->getParam('report_date');
+        $report->origin = $request->getParam('origin');
 
         $report->save();
         $response->getBody()->write(json_encode($report->as_array()));
     } catch (\Throwable $t) {
         $response->setSgetBody()->write($t->getMessage());
+    }
+
+    return $response;
+});
+
+$app->get('/api/communities/{community_id}/reports', function (Request $request, Response $response, array $args) {
+    try {
+        $model = ORM::for_table('reports')->table_alias('rp');
+        $model->join('locations', ['rp.community_id', '=', 'loc.community_id'], 'loc');
+
+        $model->where_equal('rp.community_id', $args['community_id']);
+        $model->limit(50);
+
+        $reports = $model->find_many();
+        $jsonData = [];
+        foreach($reports as $report) {
+            $jsonData[] = $report->as_array();
+        }
+
+        $response->getBody()->write(json_encode($jsonData));
+    } catch (\Throwable $t) {
+        $response->getBody()->write($t->getMessage());
     }
 
     return $response;
