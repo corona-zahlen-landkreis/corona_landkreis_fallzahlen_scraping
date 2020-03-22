@@ -5,6 +5,8 @@ import datetime
 import re
 import time
 
+import locale
+locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 from database_interface import *
 
 headers = {
