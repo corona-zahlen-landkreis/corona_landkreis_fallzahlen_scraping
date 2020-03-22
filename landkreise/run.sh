@@ -39,3 +39,5 @@ python get-siegen-wittgenstein.py
 python get-ansbach-kreis.py
 python get-kassel-stadt-kreis.py
 python get-leer-kreis.py
+python get-guetersloh.py
+python get-stade-kreis.py
