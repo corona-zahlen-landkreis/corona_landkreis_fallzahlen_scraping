@@ -47,6 +47,8 @@ headers = {
     'User-Agent': USER_AGENTS[random.randrange(0, len(USER_AGENTS), 1)] 
 }
 
+RANDOM_CLIENT_HEADERS=headers
+
 def time_stamp():
     return time.strftime("%Y-%m-%d")
 
@@ -56,15 +58,15 @@ def extract_case_num(text, prefix):
 
 # Options: debug, cookies
 def scrape(url, community_id, cases_func, date_func = None, name="", parent_community_id=None, options={'debug':SCRAPER_DEBUG}):
-    req = request_url(url,headers=headers, options=options)
+    req = request_url(url,headers=RANDOM_CLIENT_HEADERS, options=options)
     logger.debug("%s(%s): Request to %s with user-agent: %s" % (name, parent_community_id, url, headers['User-Agent']))
     bs = BeautifulSoup(req.text, "html.parser")
     if options.get('debug'):
-        print(repr(bs.text))
+        logger.debug(repr(bs.text))
     date = time_stamp() if date_func is None else date_func(bs)
     cases = cases_func(bs)
     if options.get('debug'):
-        print(str(cases) + " Fälle am " + date)
+        logger.debug(str(cases) + " Fälle am " + date)
     else:
         add_to_database(community_id, date, cases, name, parent_community_id)
 
@@ -75,9 +77,10 @@ def request_cache():
     logger.debug(cachecontrol.caches.file_cache.url_to_file_path('https://google.com', disk_cache))
     return cachecontrol.CacheControl(requests.Session(), cache=disk_cache)
 
-def request_url(url,headers=headers,options={}):
+def request_url(url,headers=RANDOM_CLIENT_HEADERS,options={}):
     resp = request_cache().get(url, headers=headers, cookies=options.get('cookies'))
     if options.get('forceEncoding') != None:
-        resp.encoding(options.get('forceEncoding'))
+        logger.debug('Forcing encoding to: %s' % options.get('forceEncoding'))
+        resp.encoding = options.get('forceEncoding')
     return resp
 

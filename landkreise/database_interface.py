@@ -34,7 +34,7 @@ def add_to_database(uniqueId, status, cases, name="", parentId=None):
         existing_line = line
     
     if status_is_in:
-      #print("nothing new")
+      #logger.debug("nothing new")
       
       if not cases_is_in:
         # there is already a line with the same status
