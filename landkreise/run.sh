@@ -41,3 +41,6 @@ python get-kassel-stadt-kreis.py
 python get-leer-kreis.py
 python get-guetersloh.py
 python get-stade-kreis.py
+python get-goeppingen.py
+python get-hildesheim.py
+python get-segeberg.py
