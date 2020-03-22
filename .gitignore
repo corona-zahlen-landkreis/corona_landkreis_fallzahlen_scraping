@@ -1,6 +1,7 @@
 api/vendor
 api/db/database.db
 landkreise/__pycache__/
+landkreise/data/.webcache/
 Pipfile
 Pipfile.lock
 ~$*.ods

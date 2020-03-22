@@ -1,31 +1,39 @@
-# Web-crawler für Corona-Fallzahlen (Landkreise oder sogar Gemeinden)
+# Web-crawler for Corona case numbers in germany (county or sub-county level)
 
 ## Inspiration
-Die offiziellen Daten beim RKI und den Bundesländern sind zum Teil mehrere Tag alt. Was gibt es naheliegenderes, als diese Daten direkt von den Webseiten der Landkreise abzufragen? Dort sind sie "direkt an der Quelle" und am aktuellsten.
+RKI's and state's data is most of the times multiple days old
+The official data at the RKI and the federal states are sometimes several days old. What could be more obvious than to retrieve this data directly from the websites of the administrative districts (county)? There they are "directly at the source" and most up-to-date.
 
-Dazu kommt eine Crowdsource-Webseite, auf der aktuelle Fallzahlen pro Landkreis (inkl Quelle) angegeben werden können
+In addition, there is a crowdsource website on which current case numbers per county (including source) can be given. (currently in the works)
 
-## Mitmachen? kein Problem
+## Want to participate? No problem!
 
-Sucht die Webseite mit Pressemitteilungen eures Kreises (oder Nachbarkreise) und versucht folgende URLs herauszufinden:
- * Prüft, ob wir die Daten schon einsammel und es einen Kreis ein get-<meinKreis>.py unter landkreise gibt!
- * Falls nicht: Wo stehen für den Kreis, die neusten Corona-Fallzahlen?
-   * Nach welchen Worten muss man suchen? (RegEx nehmen wir auch :-) )
- * Gibt es eine Liste (RSS-Feed?) von Pressemittelungen incl. Corona Meldungen? (falls sich die URL jedes Mal ändert?)
- * Optional: Welche URL / Suchwörter liefern die Fallzahlen für die Gemeinden? (Kann auch in den Pressemitteilungen des Kreises oder ähnliches stehen)
+Search the website with press releases from your district (or neighboring districts) and try to find the following URLs:
+ * Check, if we already collect the data and there is a district in landkreise/get-<mydistrict>.py!
+ * If not: Where are the newest corona-case numbers for your district?
+   * For which words do we have to search? (we also take RegEx :-) )
+ * Is there a list (RSS-Feed?) of press releases including corona messages? (in case the URL is changing all the time?)
+ * Optional: With which URL/search words do we get the case numbers at sub-county level? (might be in the press releases of the district)
 
 ## How to start the included API service
 
-TODO
-Website wo Leute einen Landkreis auswählen können, die aktuelle Fallzahl (inkl Stand) angeben können und Quelle. (Dazu Backend, dass diese Anfragen weiterleitet, mit Möglichkeit, diese anzunehmen, und so die Daten zu übernehmen.)
+[See API README](api/README.md)
+Website where people can choose a district, enter the current case number (including status date) and source. (and a backend which forwards these requests with the possibility to access these data and include it in the data set.)
 
 ## How to use the web-crawler - scraper
 
+Scraper that also generates community level output:
 ```
 ./run.sh
 # or to update a single district / community
 # run any of the get-<location>.py files
 python3 landkreise/get-soest.py
+```
+
+Newer abstracted scraper (depend on scraper.py):
+```
+# SCRAPER debug mode/logging can be enabled as follows
+SCRAPER_DEBUG=yes python3 landkreise/get-fulda.py
 ``` 
 
 The result data is saved in `landkreise/data/` as CSV files.
@@ -42,19 +50,36 @@ community data (aggregates to distrcit - hopefully):
 ### Requirements:
   * Python3
     * requests (often included)
+    * CacheControl[filecache] (persistent cache does not work yet)
+      * lockfile
     * beautiful soup 4
 
 pip3 line:
 ```
-pip3 install requests bs4
+pip3 install requests bs4 cachecontrol[filecache] lockfile
 ```
 
 Debian/Ubuntu packages:
 ```
-  sudo apt-get install python3 python3-bs4
+  sudo apt-get install python3 python3-bs4 python3-cachecontrol python3-lockfile
 ```
 
   * Makefile for Docker container also exists
 
+### Writing / Mainting a scraper
 
+Newer abstracted scraper:
+```
+# For all scrapers that are migrted to use scraper.py:
+#   request will be cached automatically
+#   user-agents will rotate
+#   debug mode
+#
+# SCRAPER debug mode/logging can be enabled as follows
+SCRAPER_DEBUG=yes python3 landkreise/get-fulda.py
+```
+
+New scrapers should use scraper.py and use request_url to load URLs.
+This should cache the website responses and reduce data-transfers.
+Also the user-agent should rotate at least for every scraper start.
 

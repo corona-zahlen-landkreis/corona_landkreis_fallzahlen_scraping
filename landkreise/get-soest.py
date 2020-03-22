@@ -1,26 +1,27 @@
 from bs4 import BeautifulSoup
 from bs4.diagnose import diagnose
-DEBUG = False
 
+import scrape
 import requests
 import datetime
 import re
-if DEBUG:
+import logging
+import locale
+
+if scrape.SCRAPER_DEBUG:
+    logging.basicConfig(level=logging.DEBUG)
     import pprint
+logger = logging.getLogger(__name__)
 
 from database_interface import *
 
 DISTRICT_UID = "05974"
 
 
-def debug_print(arg):
-  if DEBUG:
-    print(arg)
-
 main_url = "https://www.presse-service.de/rss.aspx?v=2&p=551"
 
-req = requests.get(main_url)
-req.encoding = 'utf8'
+req = scrape.request_url(main_url,headers=scrape.RANDOM_CLIENT_HEADERS,options={'debug': scrape.SCRAPER_DEBUG, 'forceEncoding': 'utf8'})
+#req.encoding = 'utf8'
 bs = BeautifulSoup(req.text, "html.parser")
 news_list = bs.findAll("item")
 for item in news_list:
@@ -31,25 +32,25 @@ for item in news_list:
     if cases_raw == None:
         continue
     cases = int(cases_raw.group(1))
-    print("\n")
-    debug_print('%s' % item.title.text)
-    debug_print('%s' % item.guid.text)
-    debug_print('%s' % item.pubdate.text)
+    logger.info("\n")
+    logger.debug('%s' % item.title.text)
+    logger.debug('%s' % item.guid.text)
+    logger.debug('%s' % item.pubdate.text)
+    locale.setlocale(locale.LC_TIME, "en_US.utf-8")
     status = datetime.datetime.strptime(item.pubdate.text, '%a, %d %b %Y %H:%M:%S %Z').replace(tzinfo=datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S %Z")
-    print('Parsed time: %s' % status)
-    if DEBUG == False:
-       add_to_database(DISTRICT_UID, status, cases, "Kreis Soest")
+    logger.debug('Parsed time: %s' % status)
+    add_to_database(DISTRICT_UID, status, cases, "Kreis Soest")
     
     # Fetch and output communities for Kreis Soest
     # using guid as link does not work?
     community_url = item.guid.text
-    subreq = requests.get(community_url)
-    subreq.encoding = 'utf8'
+    subreq = scrape.request_url(community_url,headers=scrape.RANDOM_CLIENT_HEADERS,options={'debug': scrape.SCRAPER_DEBUG, 'forceEncoding': 'utf8'})
+    #subreq.encoding = 'utf8'
     subbs = BeautifulSoup(subreq.text, "html.parser")
     search_message = 'p[class="ps_meldungstext"]'
     message = subbs.select(search_message)
     if len(message) == 0:
-        print('ERROR: did not find \'%s\' for URL: %s' % (search_message, community_url))
+        logger.error('ERROR: did not find \'%s\' for URL: %s' % (search_message, community_url))
         continue
     message = message[0].p.text
 
@@ -89,11 +90,10 @@ for item in news_list:
         community_matches = re.search(community_pattern % key, message)
         if community_matches != None:
             community[key][cases] = int(community_matches.group(1))
-            if DEBUG == False:
-                add_to_database(community[key]['uid'], status, community[key][cases], key, DISTRICT_UID)
+            add_to_database(community[key]['uid'], status, community[key][cases], key, DISTRICT_UID)
         else:
-            print('ERROR: Failed to find \'%s\' in %s' %(community_pattern % key, community_url))
+            logger.error('ERROR: Failed to find \'%s\' in %s' %(community_pattern % key, community_url))
 
-    if DEBUG:
+    if scrape.SCRAPER_DEBUG:
         pprint.pprint(("Communities:", community))
 
