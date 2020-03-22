@@ -23,9 +23,9 @@ def extract_status_date(bs, prefix, input_date_format, output_date_format="%Y-%m
     date_string = datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)
     return check_and_replace_year(date_string)
 
-def extract_status_date_directregex(bs, regexmatch, input_date_format, match, output_date_format="%Y-%m-%d %H:%M:%S"):
+def extract_status_date_directregex(text, regexmatch, input_date_format, match, output_date_format="%Y-%m-%d %H:%M:%S"):
     locale.setlocale(locale.LC_ALL, "de_DE.utf-8")
-    status_raw = re.findall(regexmatch,bs.getText())[match]
+    status_raw = re.findall(regexmatch,text)[match]
     date_string = datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)
     return check_and_replace_year(date_string)
 
