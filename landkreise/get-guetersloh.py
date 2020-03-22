@@ -7,8 +7,8 @@ import datetime
 import re
 
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 # for some german month names, e.g. März
 import locale
@@ -24,7 +24,8 @@ bs = BeautifulSoup(req.text, "html.parser")
 cases_pattern = "insgesamt [0-9]+ laborbest"
 
 # I don't know, why I need to do this on my osx
-text=bs.getText().decode("UTF-8").encode("UTF-8")
+text=bs.getText()
+#.decode("UTF-8").encode("UTF-8")
 
 # Im Kreis Gütersloh gibt es aktuell, das heißt zum Stand: 17. März, 14:00 Uhr, insgesamt 91 laborbestätigte Coronainfektionen.
 
