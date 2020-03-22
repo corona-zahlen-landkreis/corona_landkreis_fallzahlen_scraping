@@ -38,6 +38,6 @@ class CreateEntriesTable extends AbstractMigration
                 ->addColumn('dead', 'integer', ['null' => false])
                 ->addColumn('report_date', 'date', ['null' => false])
                 ->addColumn('created_at', 'datetime', ['default' => 'CURRENT_TIMESTAMP'])
-                ->save();
+                ->create();
     }
 }
