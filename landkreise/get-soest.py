@@ -37,7 +37,8 @@ for item in news_list:
     logger.debug('%s' % item.guid.text)
     logger.debug('%s' % item.pubdate.text)
     locale.setlocale(locale.LC_TIME, "en_US.utf-8")
-    status = datetime.datetime.strptime(item.pubdate.text, '%a, %d %b %Y %H:%M:%S %Z').replace(tzinfo=datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S %Z")
+# we could convert timezone here, but this is too advanced for now, so we drop hours
+    status = datetime.datetime.strptime(item.pubdate.text, '%a, %d %b %Y %H:%M:%S %Z').replace(tzinfo=datetime.timezone.utc).strftime("%Y-%m-%d")
     logger.debug('Parsed time: %s' % status)
     add_to_database(DISTRICT_UID, status, cases, "Kreis Soest")
     
