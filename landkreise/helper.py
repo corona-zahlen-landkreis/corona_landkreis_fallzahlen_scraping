@@ -13,6 +13,7 @@ def extract_status_date(bs, prefix, input_date_format, output_date_format="%Y-%m
     status_raw = bs.findAll(text=re.compile(prefix))[0]
     return datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)
 
-def extract_status_date_directregex(bs, regexmatch, input_date_format, match, output_date_format="%Y-%m-%d %H:%M:%S"):
-    status_raw = re.findall(regexmatch,bs.getText())[match]
+def extract_status_date_directregex(text, regexmatch, input_date_format, match, output_date_format="%Y-%m-%d %H:%M:%S"):
+    print(text)
+    status_raw = re.findall(regexmatch,text)[match]
     return datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)

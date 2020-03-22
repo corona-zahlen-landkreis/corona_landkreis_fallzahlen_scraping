@@ -10,7 +10,7 @@ date_regex="Stand: .*?\)"
 date_format = "Stand: %d.%m.%Y)"
 
 case_func = lambda bs: helper.extract_case_num_directregex(bs.text, regex, 0)
-date_func = lambda bs: helper.extract_status_date_directregex(bs, date_regex, date_format, 0, "%Y-%m-%d")
+date_func = lambda bs: helper.extract_status_date_directregex(bs.text, date_regex, date_format, 0, "%Y-%m-%d")
 
 scrape.scrape(url, "09571", case_func, date_func)
 
