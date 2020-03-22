@@ -46,3 +46,4 @@ python get-hildesheim.py
 python get-segeberg.py
 python get-mindenluebbecke-kreis.py
 python get-giessen.py
+python get-steinfurt.py
