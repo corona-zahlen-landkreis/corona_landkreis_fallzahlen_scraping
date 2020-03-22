@@ -11,7 +11,7 @@ date_format = "Abschlussmeldung %d.%m.%Y"
 case_func = lambda bs: helper.extract_case_num_directregex(bs.text, regex,0)
 date_func = lambda bs: helper.extract_status_date_directregex(bs.text, date_regex, date_format, 0, "%Y-%m-%d")
 
-scrape.scrape(url, "07143", case_func, date_func)
+scrape.scrape(url, "07143", case_func, date_func, "Westerwaldkreis")
 
 
 

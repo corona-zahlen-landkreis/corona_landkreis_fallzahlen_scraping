@@ -35,6 +35,6 @@ status= datetime.datetime.strptime(status_raw, 'Stand: %d. %B %Y').strftime("%Y-
 #print(cases_rheinneckarkreis)
 #print(status)
 
-add_to_database("08226", status, cases_rheinneckarkreis)
-add_to_database("08221000", status, cases_heidelberg)
+add_to_database("08226", status, cases_rheinneckarkreis, "Rhein-Neckar-Kreis")
+add_to_database("08221000", status, cases_heidelberg, "Heidelberg")
 

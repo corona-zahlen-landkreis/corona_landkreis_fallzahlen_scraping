@@ -30,5 +30,5 @@ cases_enzkreis_raw = re.findall(cases_enzkreis_pattern,text)[0]
 cases_enzkreis = int(re.findall(r'[0-9]+', cases_enzkreis_raw)[0])
 
 
-add_to_database("08231", status, cases_pforzheim)
-add_to_database("08236", status, cases_enzkreis)
+add_to_database("08231", status, cases_pforzheim, "Pforzheim")
+add_to_database("08236", status, cases_enzkreis, "Enzkreis")

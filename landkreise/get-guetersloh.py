@@ -40,4 +40,4 @@ for one_info in information_raw:
     status = statusDate.replace(year = 2020).strftime("%Y-%m-%d %H:%M")    
     cases_raw = re.findall("insgesamt [0-9]+ laborbest", one_info)[0]
     cases = int(re.findall(r'[0-9]+', cases_raw)[0])
-    add_to_database("05754", status, cases)
+    add_to_database("05754", status, cases, "Kreis Gütersloh")

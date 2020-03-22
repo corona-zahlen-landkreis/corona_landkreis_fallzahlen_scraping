@@ -22,4 +22,4 @@ status= datetime.datetime.strptime(status_raw, 'Stand: %A, %d. %B %Y').strftime(
 cases_raw = bs.find('h2',{'class':'c_chart_h2'}).getText()
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
-add_to_database("02000000", status, cases)
+add_to_database("02000000", status, cases, "Hamburg")

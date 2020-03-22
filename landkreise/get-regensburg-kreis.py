@@ -13,7 +13,7 @@ date_format = "Stand: %d.%m.%Y, %H:%M Uhr"
 case_func = lambda bs: helper.extract_case_num(bs.text, prefix)
 date_func = lambda bs: helper.extract_status_date_directregex(bs.text, date_regex, date_format, 0)
 
-scrape.scrape(url, "09362",case_func, date_func)
+scrape.scrape(url, "09362",case_func, date_func, "Kreis Regensburg")
 
 
 

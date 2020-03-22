@@ -18,4 +18,4 @@ cases_raw=bs.findAll(text=re.compile("Stadtkreis Ulm \("))[0]
 cases = int(re.findall(r'[0-9]+', cases_raw)[2])
 
 
-add_to_database("08421000", status, cases)
+add_to_database("08421000", status, cases, "Stadtkreis Ulm")
