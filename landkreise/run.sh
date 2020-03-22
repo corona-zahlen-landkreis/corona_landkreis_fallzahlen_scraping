@@ -44,4 +44,5 @@ python get-stade-kreis.py
 python get-goeppingen.py
 python get-hildesheim.py
 python get-segeberg.py
+python get-mindenluebbecke-kreis.py
 python get-giessen.py
