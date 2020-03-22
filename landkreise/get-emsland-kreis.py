@@ -99,5 +99,3 @@ for key in communities.keys():
         cases = community_cases[0].findNext('td').get_text()
         communities[key]['cases'] = int(cases)
         add_to_database(communities[key]['uid'], status, communities[key]['cases'], key, DISTRICT_UID)
-
-print(communities)
