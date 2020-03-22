@@ -1,4 +1,7 @@
 import os.path
+import logging
+
+logger = logging.getLogger(__name__)
 
 def add_to_database(uniqueId, status, cases, name="", parentId=None):
   if parentId == None:
@@ -21,6 +24,9 @@ def add_to_database(uniqueId, status, cases, name="", parentId=None):
     
     for line in file:
       line_count = line_count + 1
+      line = line.strip()
+      if "".__eq__(line):
+          continue
       if(status in line):
         status_is_in = True
         if(","+str(cases)) in line:
@@ -38,10 +44,10 @@ def add_to_database(uniqueId, status, cases, name="", parentId=None):
         except Exception as e:
             logger.error('%s in line %s "%s" -- new: %s %s' %(e,line_count, existing_line, status, cases))
             return
-
+            
         print("status: {}, cases:{}".format(line_status,line_cases))
         if int(line_cases) != cases:
-            print("ERROR in {}:{}: Collision with existing value {}={}, but new value is {}={}".format(data_file, line_count, line_status, line_cases, status, cases))
+            logger.error("{}:{}: Collision with existing value {}={}, but new value is {}={}".format(data_file, line_count, line_status, line_cases, status, cases))
             
         if parentId == None:
           print("NEU: {}({}) hat {} Fälle, Stand {}".format(name, uniqueId, cases, status))
