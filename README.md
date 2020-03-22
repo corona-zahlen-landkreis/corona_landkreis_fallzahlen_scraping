@@ -16,16 +16,23 @@ Sucht die Webseite mit Pressemitteilungen eures Kreises (oder Nachbarkreise) und
 
 ## How to start the included API service
 
-TODO
+[See API README](api/README.md)
 Website wo Leute einen Landkreis auswählen können, die aktuelle Fallzahl (inkl Stand) angeben können und Quelle. (Dazu Backend, dass diese Anfragen weiterleitet, mit Möglichkeit, diese anzunehmen, und so die Daten zu übernehmen.)
 
 ## How to use the web-crawler - scraper
 
+Scraper that also generates community level output:
 ```
 ./run.sh
 # or to update a single district / community
 # run any of the get-<location>.py files
 python3 landkreise/get-soest.py
+```
+
+Newer abstracted scraper (depend on scraper.py):
+```
+# SCRAPER debug mode/logging can be enabled as follows
+SCRAPER_DEBUG=yes python3 landkreise/get-fulda.py
 ``` 
 
 The result data is saved in `landkreise/data/` as CSV files.
@@ -42,19 +49,36 @@ community data (aggregates to distrcit - hopefully):
 ### Requirements:
   * Python3
     * requests (often included)
+    * CacheControl[filecache] (persistent cache does not work yet)
+      * lockfile
     * beautiful soup 4
 
 pip3 line:
 ```
-pip3 install requests bs4
+pip3 install requests bs4 cachecontrol[filecache] lockfile
 ```
 
 Debian/Ubuntu packages:
 ```
-  sudo apt-get install python3 python3-bs4
+  sudo apt-get install python3 python3-bs4 python3-cachecontrol python3-lockfile
 ```
 
   * Makefile for Docker container also exists
 
+### Writing / Mainting a scraper
 
+Newer abstracted scraper:
+```
+# For all scrapers that are migrted to use scraper.py:
+#   request will be cached automatically
+#   user-agents will rotate
+#   debug mode
+#
+# SCRAPER debug mode/logging can be enabled as follows
+SCRAPER_DEBUG=yes python3 landkreise/get-fulda.py
+```
+
+New scrapers should use scraper.py and use request_url to load URLs.
+This should cache the website responses and reduce data-transfers.
+Also the user-agent should rotate at least for every scraper start.
 

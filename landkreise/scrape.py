@@ -6,11 +6,20 @@ import re
 import time
 import random
 import requests
+import cachecontrol
+from cachecontrol.caches.file_cache import FileCache
+import pathlib
+import logging
 
 import locale
 locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 from database_interface import *
 
+SCRAPER_DEBUG='SCRAPER_DEBUG' in os.environ and os.environ['SCRAPER_DEBUG'] == 'yes'
+
+if SCRAPER_DEBUG:
+  logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 USER_AGENTS = [
         # GPLv3: Taken from https://gitlab.com/ntninja/user %s/\([^\/]\+\/ [^:]\+\): \(.\+\)$/\t'\2', #\1/g-agent-switcher/-/blob/master/assets/user-agents.txt
@@ -46,9 +55,9 @@ def extract_case_num(text, prefix):
     return int(re.findall("[0-9]+", cases_raw)[0])   
 
 # Options: debug, cookies
-def scrape(url, community_id, cases_func, date_func = None, name="", parent_community_id=None, options={}):
+def scrape(url, community_id, cases_func, date_func = None, name="", parent_community_id=None, options={'debug':SCRAPER_DEBUG}):
     req = request_url(url,headers=headers, options=options)
-    print("%s(%s): Request to %s with user-agent: %s" % (name, parent_community_id, url, headers['User-Agent']))
+    logger.debug("%s(%s): Request to %s with user-agent: %s" % (name, parent_community_id, url, headers['User-Agent']))
     bs = BeautifulSoup(req.text, "html.parser")
     if options.get('debug'):
         print(repr(bs.text))
@@ -60,7 +69,11 @@ def scrape(url, community_id, cases_func, date_func = None, name="", parent_comm
         add_to_database(community_id, date, cases, name, parent_community_id)
 
 def request_cache():
-    return requests.Session()
+    data_dir = pathlib.Path(__file__).parent.joinpath('data')
+    cache_dir = data_dir.joinpath('.webcache').absolute()
+    disk_cache = FileCache(cache_dir, forever=True)
+    logger.debug(cachecontrol.caches.file_cache.url_to_file_path('https://google.com', disk_cache))
+    return cachecontrol.CacheControl(requests.Session(), cache=disk_cache)
 
 def request_url(url,headers=headers,options={}):
     resp = request_cache().get(url, headers=headers, cookies=options.get('cookies'))
