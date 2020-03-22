@@ -21,7 +21,7 @@ table = bs.find('table',{"data-bordercolor":"#949292"})
 data = helper.get_table(table)
 
 status_raw = re.findall("\(Stand .*? Uhr",bs.text)[0]
-status= datetime.datetime.strptime(status_raw, '(Stand %d. %B, %H.%M Uhr').strftime("2020-%m-%d %H:%M")
+status= datetime.datetime.strptime(status_raw, '(Stand %d. %B, %H.%M Uhr').strftime("2020-%m-%d %H:%M:%S")
 
 cases_total = int(data[13][1])
 
