@@ -35,6 +35,12 @@ def add_to_database(uniqueId, status, cases, name="", parentId=None):
         print("status: {}, cases:{}".format(line_status,line_cases))
         if int(line_cases) != cases:
             print("ERROR in {}: Collision with existing value {}={}, but new value is {}={}".format(data_file, line_status, line_cases, status, cases))
+            
+        if parentId == None:
+          print("NEU: {}({}) hat {} Fälle, Stand {}".format(name, uniqueId, cases, status))
+        else:
+          print("NEU: {}({} teil von {}) hat {} Fälle, Stand {}".format(name, uniqueId, parentId, cases, status))
+        file.write(status+ ","+str(cases)+"\n")    
     else:
       if parentId == None:
         print("NEU: {}({}) hat {} Fälle, Stand {}".format(name, uniqueId, cases, status))
