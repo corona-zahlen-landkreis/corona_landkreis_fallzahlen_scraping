@@ -68,6 +68,7 @@ export default {
         async save() {
             let params = {
                 report_date: moment(new Date()).format("YYYY-MM-DD"),
+                origin: 'web-ui',
                 community_id: this.community_id,
                 infected: this.infected,
                 cured: this.cured,

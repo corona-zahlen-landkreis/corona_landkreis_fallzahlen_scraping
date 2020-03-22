@@ -20,20 +20,30 @@ $ php -S localhost:8080
 ```
 Method Post:
 
-http://localhost:8080/reports
+http://localhost:8080/api/reports
 ?community_id=321
 &infected=5
 &cured=5
 &dead=0
-&report_date=2020-03-21
+&report_date=2020-03-21,
+&origin=webscraper
 ```
 
 // List Reports
+
 ```
 Method Get
-http://localhost:8080/reports
+
+http://localhost:8080/api/reports
 
 
-http://localhost:8080/reports/{id}
+http://localhost:8080/api/reports/{id}
+
+```
+
+// List Reports for a Community
+```
+Method Get
+http://localhost:8080/api/communities/{community_id}/reports
 
 ```

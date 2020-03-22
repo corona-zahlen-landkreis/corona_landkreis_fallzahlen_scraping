@@ -66,6 +66,8 @@ export default {
         };
     },
     created() {
+        // console.log(this.$route.params.id)
+
         this.load();
     },
     methods: {
