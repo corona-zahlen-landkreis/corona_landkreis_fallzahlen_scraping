@@ -18,4 +18,4 @@ cases_raw=bs.findAll(text=re.compile("Alb-Donau-Kreis \("))[0]
 cases = int(re.findall(r'[0-9]+', cases_raw)[2])
 
 
-add_to_database("08425", status, cases)
+add_to_database("08425", status, cases, "Alb-Donau-Kreis")

@@ -22,4 +22,4 @@ status= datetime.datetime.strptime(status_raw, '(Stand: %d.%m.%Y, %H Uhr)').strf
 cases_raw=re.findall(cases_pattern, bs.find('div', {"id": "boxid16843898"}).getText() )[0]
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
-add_to_database("08417", status, cases)
+add_to_database("08417", status, cases, "Zollernalbkreis")
