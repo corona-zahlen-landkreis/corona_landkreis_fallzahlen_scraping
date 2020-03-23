@@ -1,6 +1,10 @@
 import re
 import datetime
 import locale
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 # NOTE: these have to be sorted, with the most general regex at the bottom!
 date_regexes = {
@@ -36,24 +40,54 @@ def check_and_replace_year(date_string):
     else:
         return date_string
 
-def extract_case_num(text, prefix):
-    cases_raw = text.split(prefix)[1]
-    return get_number_only(cases_raw)
+def extract_case_num(text, prefix, source=None):
+    try:
+        cases_raw = text.split(prefix)[1]
+        return get_number_only(cases_raw)
+    except (IndexError, ValueError) as e:
+        raise ParsingError((prefix, source), 'Failed to split by %r in %s : %s', e)
 
-def extract_case_num_directregex(text, regex, match):
-    cases_raw = re.findall(regex,text)[match]
-    return get_number_only(cases_raw)
+def extract_case_num_directregex(text, regex, match, source=None):
+    try:
+        cases_raw = re.findall(regex,text)[match]
+        return get_number_only(cases_raw)
+    except (IndexError, ValueError) as e:
+        raise ParsingError((regex, source), 'Failed to match %r in %s : %s', e)
 
-def extract_status_date(bs, prefix, input_date_format, output_date_format="%Y-%m-%d %H:%M:%S"):
-    locale.setlocale(locale.LC_ALL, "de_DE.utf-8")
-    status_raw = bs.findAll(text=re.compile(prefix))[0]
-    date_string = datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)
-    return check_and_replace_year(date_string)
+def genfunc_dateformats_parser(default=datetime.datetime.now(), *date_formats, locales=["de_DE.utf-8"]):
+    def parse_date(date_value):
+        for date_format in date_formats:
+            for oneLocale in locales:
+                try:
+                    locale.setlocale(locale.LC_ALL, oneLocale)
+                    return datetime.datetime.strptime(date_value,  date_format)
+                except (ValueError, TypeError):
+                    continue
+        return default
+    # set name of conversion function to something more useful
+    namext = ("_%s_" % default) + "_".join(str(df) for df in date_formats)
+    if hasattr(parse_date, "__qualname__"):
+        parse_date.__qualname__ += namext
+    parse_date.__name__ += namext
+    return parse_date
 
-def extract_status_date_directregex(text, regexmatch, input_date_format, match, output_date_format="%Y-%m-%d %H:%M:%S"):
-    locale.setlocale(locale.LC_ALL, "de_DE.utf-8")
-    status_raw = re.findall(regexmatch,text)[match]
-    date_string = datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)
+def extract_status_date(bs, regex, input_date_format, output_date_format="%Y-%m-%d %H:%M:%S", source=None):
+    status_raw = bs.findAll(text=re.compile(regex))
+    return extract_status_date(status_raw, input_date_format, output_date_format, (regex,source))
+
+def extract_status_date_directregex(text, regexmatch, input_date_format, match, output_date_format="%Y-%m-%d %H:%M:%S", source=None):
+    status_raw = re.findall(regexmatch,text)
+    return extract_status_date(status_raw, input_date_format, match, output_date_format, (regexmatch, source))
+
+def extract_status_date(matches_array, input_date_format, match, output_date_format="%Y-%m-%d %H:%M:%S", source=("regex","url/file")):
+    if matches_array == None or len(matches_array)<=match:
+        raise ParsingError(source, 'Failed to match %r in %s')
+    status_raw = matches_array[match]
+    if callable(input_date_format):
+        date_string = input_date_format(status_raw).strftime(output_date_format)
+    else:
+        locale.setlocale(locale.LC_ALL, "de_DE.utf-8")
+        date_string = datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)
     return check_and_replace_year(date_string)
 
 def clear_text_of_ambigous_chars(text):
@@ -122,3 +156,17 @@ class InvalidDateException(Exception):
     def __init__(self, message, text=None):
         super().__init__(message)
         print(text)
+
+class ParsingError(Exception):
+    """Raised when a URL cannot be parsed."""
+
+    def __init__(self, source, message='Failed to parse source: %r %r', cause=None):
+        if not source:
+            raise ValueError("Required argument `source' not given.")
+        if (cause is None):
+            param = source
+        else:
+            param = () + source + (cause,)
+        Exception.__init__(self, str(message) % param)
+        self.source = source
+        self.cause = cause

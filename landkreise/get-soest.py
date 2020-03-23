@@ -40,7 +40,7 @@ for item in news_list:
 # we could convert timezone here, but this is too advanced for now, so we drop hours
     status = datetime.datetime.strptime(item.pubdate.text, '%a, %d %b %Y %H:%M:%S %Z').replace(tzinfo=datetime.timezone.utc).strftime("%Y-%m-%d")
     logger.debug('Parsed time: %s' % status)
-    add_to_database(DISTRICT_UID, status, cases, "Kreis Soest")
+    add_to_database(DISTRICT_UID, status, cases, "Kreis Soest", None, item.guid.text, req.headers['Date'])
     
     # Fetch and output communities for Kreis Soest
     # using guid as link does not work?
@@ -91,7 +91,7 @@ for item in news_list:
         community_matches = re.search(community_pattern % key, message)
         if community_matches != None:
             community[key][cases] = int(community_matches.group(1))
-            add_to_database(community[key]['uid'], status, community[key][cases], key, DISTRICT_UID)
+            add_to_database(community[key]['uid'], status, community[key][cases], key, DISTRICT_UID, item.guid.text, req.headers['Date'])
         else:
             logger.error('ERROR: Failed to find \'%s\' in %s' %(community_pattern % key, community_url))
 

@@ -43,11 +43,11 @@ USER_AGENTS = [
 
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0',
         ]
-headers = {
+RANDOM_CLIENT_HEADERS = {
     'User-Agent': USER_AGENTS[random.randrange(0, len(USER_AGENTS), 1)] 
 }
 
-RANDOM_CLIENT_HEADERS=headers
+#RANDOM_CLIENT_HEADERSheaders
 
 def time_stamp():
     return time.strftime("%Y-%m-%d")
@@ -59,7 +59,7 @@ def time_stamp():
 # Options: debug, cookies
 def scrape(url, community_id, cases_func, date_func = None, name="", parent_community_id=None, options={'debug':SCRAPER_DEBUG}):
     req = request_url(url,headers=RANDOM_CLIENT_HEADERS, options=options)
-    logger.debug("%s(%s): Request to %s with user-agent: %s" % (name, parent_community_id, url, headers['User-Agent']))
+    logger.debug("%s(%s): Request to %s with user-agent: %s" % (name, parent_community_id, url, RANDOM_CLIENT_HEADERS['User-Agent']))
     bs = BeautifulSoup(req.text, "html.parser")
     if options.get('debug'):
         logger.debug(repr(bs.text))
@@ -68,7 +68,7 @@ def scrape(url, community_id, cases_func, date_func = None, name="", parent_comm
     if options.get('debug'):
         logger.debug(str(cases) + " Fälle am " + date)
     else:
-        add_to_database(community_id, date, cases, name, parent_community_id)
+        add_to_database(community_id, date, cases, name, parent_community_id, url, req.headers['Date'])
 
 def request_cache():
     data_dir = pathlib.Path(__file__).parent.joinpath('data')

@@ -3,7 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def add_to_database(uniqueId, status, cases, name="", parentId=None):
+def add_to_database(uniqueId, status, cases, name="", parentId=None, url=None, downloadTime=None):
   if parentId == None:
     data_file = "data/"+uniqueId+".csv"
   else:
@@ -13,12 +13,12 @@ def add_to_database(uniqueId, status, cases, name="", parentId=None):
 
   if not os.path.isfile(data_file):
     f = open(data_file, "w")
-    f.write("Status,Cases\n")
+    f.write("Status,Cases,Source URL,Download time\n")
     f.close()
 
   with open(data_file, "r+") as file:
     line_count = 0
-    status_is_in = False  
+    status_is_in = False
     cases_is_in = False
     existing_line = ""
     
@@ -40,10 +40,14 @@ def add_to_database(uniqueId, status, cases, name="", parentId=None):
         # there is already a line with the same status
         # verify/report value mismatch? (offer merge later, usually just overwrite with correct newer values?)
         try:
-            [line_status, line_cases] = existing_line.split(",")
+            [line_status, line_cases, line_url, line_downloadTime] = existing_line.split(",")
         except Exception as e:
-            logger.error('%s in line %s "%s" -- new: %s %s' %(e,line_count, existing_line, status, cases))
-            return
+            logger.warning('line %s "%s" old format -- new: %s %s %s' %(line_count, existing_line, status, cases, url, downloadTime))
+            try:
+                [line_status, line_cases] = existing_line.split(",")
+            except Exception as e:
+                logger.error('%s in line %s "%s" -- new: %s %s %s %s' %(e,line_count, existing_line, status, cases, url, downloadTime))
+                return
             
         print("status: {}, cases:{}".format(line_status,line_cases))
         if int(line_cases) != cases:
@@ -53,10 +57,11 @@ def add_to_database(uniqueId, status, cases, name="", parentId=None):
           print("NEU: {}({}) hat {} Fälle, Stand {}".format(name, uniqueId, cases, status))
         else:
           print("NEU: {}({} teil von {}) hat {} Fälle, Stand {}".format(name, uniqueId, parentId, cases, status))
-        file.write(status+ ","+str(cases)+"\n")    
+        file.write(status+ ","+str(cases)+','+str(url)+','+str(downloadTime)+"\n")
     else:
       if parentId == None:
         print("NEU: {}({}) hat {} Fälle, Stand {}".format(name, uniqueId, cases, status))
       else:
         print("NEU: {}({} teil von {}) hat {} Fälle, Stand {}".format(name, uniqueId, parentId, cases, status))
-      file.write(status+ ","+str(cases)+"\n")
+      #TODO URL escape , in url and downloadTime
+      file.write(status+ ","+str(cases)+','+str(url)+','+str(downloadTime)+"\n")
