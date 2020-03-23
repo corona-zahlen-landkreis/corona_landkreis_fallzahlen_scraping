@@ -38,7 +38,7 @@ SCRAPER_DEBUG=yes python3 landkreise/get-fulda.py
 
 The result data is saved in `landkreise/data/` as CSV files.
 Each CSV file is named by it's official Id.
-The `districtId` and `communitId` values are declared in [sources.json](sources.json). The district/community level unique Ids are the official identifier from https://de.wikipedia.org/wiki/Amtlicher_Gemeindeschl%C3%BCssel.
+The `districtId` and `communitId` values are declared in [sources.csv](https://github.com/corona-zahlen-landkreis/corona_landkreis_fallzahlen_scraping/blob/895afda1da29f1f00c2845617effdcd0011a469a/sources.csv) (file has been replaced by [location.json](api/db/raw-data/locations.json) is master). The district/community level unique Ids are the official identifier from https://de.wikipedia.org/wiki/Amtlicher_Gemeindeschl%C3%BCssel.
 
 districts data:
 
