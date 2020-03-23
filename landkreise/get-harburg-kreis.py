@@ -4,7 +4,7 @@ import requests
 import datetime
 import re
 import locale
-
+import dateparser
 
 locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 import helper
@@ -23,10 +23,10 @@ table = bs.find('table')
 data = helper.get_table(bs.find('table'))
 
 # remove table head
-data.pop(0)
+#data.pop(0)
 
 for row in data:
-    status = datetime.datetime.strptime(row[0], '%d.%m. %Y').strftime("%Y-%m-%d")
+    status = dateparser.parse(row[0]).strftime("%Y-%m-%d")
     cases = int(row[1])
     add_to_database("03353", status, cases, "Kreis Harburg")
 
