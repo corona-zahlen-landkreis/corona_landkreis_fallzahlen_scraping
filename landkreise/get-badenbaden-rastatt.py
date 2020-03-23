@@ -17,12 +17,12 @@ main_url = "https://www.baden-baden.de/buergerservice/news/corona-aktuell_9635/"
 
 req = requests.get(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
-text = bs.find(text=re.compile(r"Baden-Baden. Im Zuständigkeitsbereich des Gesundheitsamtes in Rastatt, zu dem neben Baden-Baden auch der Landkreis Rastatt gehört, sind aktuell insgesamt"))
+text = bs.find(text=re.compile(r"Baden-Baden\..*?Rastatt.*?Stand"))
 
 
 status_pattern = "Stand .* Uhr"
-cases_total_pattern = "sind aktuell insgesamt .* Personen"
-cases_badenbaden_pattern = "Davon sind .* aus Baden-Baden"
+cases_total_pattern = "Zusammen sind das .* Personen"
+cases_badenbaden_pattern = "In Baden-Baden haben sich inzwischen.*infiziert"
 
 
 status_raw=re.findall(status_pattern,text)[0]
