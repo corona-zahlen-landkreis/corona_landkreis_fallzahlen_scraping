@@ -89,3 +89,15 @@ New scrapers should use scraper.py and use request_url to load URLs.
 This should cache the website responses and reduce data-transfers.
 Also the user-agent should rotate at least for every scraper start.
 
+# unparsable Landkreise
+It would be nice, if you would check these for new data and open a PR!
+
+
+| name | website   | id |
+|---|---| --- |
+|Kreis Vorpommern-Greifswald  | https://www.kreis-vg.de/'/index.php?object=tx%7C3079.14723.1%27   | 13075 |
+|   |   | |
+|   |   | |
+
+For more, see the project tab!
+
