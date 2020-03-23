@@ -11,11 +11,11 @@ def check_and_replace_year(date_string):
 
 def extract_case_num(text, prefix):
     cases_raw = text.split(prefix)[1]
-    return int(re.findall("[0-9]+", cases_raw)[0])
+    return get_number_only(cases_raw)
 
 def extract_case_num_directregex(text, regex, match):
     cases_raw = re.findall(regex,text)[match]
-    return int(re.findall("[0-9]+", cases_raw)[0])
+    return get_number_only(cases_raw)
 
 def extract_status_date(bs, prefix, input_date_format, output_date_format="%Y-%m-%d %H:%M:%S"):
     locale.setlocale(locale.LC_ALL, "de_DE.utf-8")
@@ -28,6 +28,9 @@ def extract_status_date_directregex(text, regexmatch, input_date_format, match, 
     status_raw = re.findall(regexmatch,text)[match]
     date_string = datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)
     return check_and_replace_year(date_string)
+
+def get_number_only(text):
+    return int(re.findall("[0-9]+", text)[0])
 
 def get_table(table):
     data = []
