@@ -1,5 +1,11 @@
 # Web-crawler for Corona case numbers in germany (county or sub-county level)
 
+**67** Landkreise/Stadtkreis/Kreisfreihe Städte  are currently supported. 
+
+**6** of those also have sub-county (Stadt/Gemeinde) level support.
+
+**WE NEED YOUR HELP 🙌**
+
 ## Inspiration
 RKI's and state's data is most of the times multiple days old
 The official data at the RKI and the federal states are sometimes several days old. What could be more obvious than to retrieve this data directly from the websites of the administrative districts (county)? There they are "directly at the source" and most up-to-date.
