@@ -29,6 +29,9 @@ def extract_status_date_directregex(text, regexmatch, input_date_format, match, 
     date_string = datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)
     return check_and_replace_year(date_string)
 
+def clear_text_of_ambigous_chars(text):
+    return text.replace("\xa0", " ").replace("\r","\n")
+
 def get_number_only(text):
     return int(re.findall("[0-9]+", text)[0])
 
