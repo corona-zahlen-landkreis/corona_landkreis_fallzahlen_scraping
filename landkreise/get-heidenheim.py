@@ -32,14 +32,16 @@ cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 community = {
     # heidenheim an der brenz
             'Stadt Heidenheim':    { 'uid': '08135019', cases: -1 },
-            'Giengen':       { 'uid': '08135016', cases: -1 },
-            'Herbrechtingen':{ 'uid': '08135020', cases: -1 },
-            'Dischingen':    { 'uid': '08135010', cases: -1 },
-            'Hermaringen':   { 'uid': '08135021', cases: -1 },
-            'Königsbronn':   { 'uid': '08135025', cases: -1 },
-            'Nattheim':      { 'uid': '08135026', cases: -1 },
-            'Sontheim':      { 'uid': '08135031', cases: -1 },
-            'Steinheim':     { 'uid': '08135032', cases: -1 },
+            'Giengen':             { 'uid': '08135016', cases: -1 },
+            'Herbrechtingen':      { 'uid': '08135020', cases: -1 },
+            'Niederstotzingen':    { 'uid': '08135027', cases: -1 },
+            'Dischingen':          { 'uid': '08135010', cases: -1 },
+            'Gerstetten':          { 'uid': '08135015', cases: -1 },
+            'Hermaringen':         { 'uid': '08135021', cases: -1 },
+            'Königsbronn':         { 'uid': '08135025', cases: -1 },
+            'Nattheim':            { 'uid': '08135026', cases: -1 },
+            'Sontheim':            { 'uid': '08135031', cases: -1 },
+            'Steinheim':           { 'uid': '08135032', cases: -1 },
     
 }
 community_pattern = "%s: [0-9]+"
