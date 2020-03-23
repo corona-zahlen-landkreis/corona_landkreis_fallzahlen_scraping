@@ -14,7 +14,7 @@ main_url = "https://www.kreis-paderborn.de/kreis_paderborn/aktuelles/pressemitte
 req = requests.get(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
-cases_pattern = "sind insgesamt [0-9]+ Menschen positiv auf eine Co"
+cases_pattern = "sind insgesamt [0-9]+"
 
 text=bs.getText()
 
@@ -24,6 +24,7 @@ status= datetime.datetime.strptime(status_raw, 'Stand: %A, %d.%m.%Y -  %H:%M Uhr
 
 
 cases_raw = re.findall(cases_pattern,text)[0]
+#print(cases_raw)
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
 add_to_database("05774", status, cases, "Kreis Paderborn")
