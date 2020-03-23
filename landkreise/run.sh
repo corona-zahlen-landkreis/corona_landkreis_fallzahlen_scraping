@@ -49,3 +49,4 @@ python get-giessen.py
 python get-steinfurt.py
 python get-dresden.py
 python get-hamburg.py
+python get-leipzig-kreis.py
