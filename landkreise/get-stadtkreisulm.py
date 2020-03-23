@@ -6,6 +6,7 @@ import re
 
 from database_interface import *
 
+# yes, that url is  correct. 
 main_url = "https://www.alb-donau-kreis.de/alb-donau-kreis/startseite/dienstleistungen+service/coronavirus.html"
 
 req = requests.get(main_url)
