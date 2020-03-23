@@ -59,15 +59,16 @@ community data (aggregates to distrcit - hopefully):
     * CacheControl[filecache] (persistent cache does not work yet)
       * lockfile
     * beautiful soup 4
+    * running all scrapers tqdm
 
 pip3 line:
 ```
-pip3 install requests bs4 cachecontrol[filecache] lockfile
+pip3 install requests bs4 cachecontrol[filecache] lockfile tqdm
 ```
 
 Debian/Ubuntu packages:
 ```
-  sudo apt-get install python3 python3-bs4 python3-cachecontrol python3-lockfile
+  sudo apt-get install python3 python3-bs4 python3-cachecontrol python3-lockfile python3-tqdm
 ```
 
   * Makefile for Docker container also exists

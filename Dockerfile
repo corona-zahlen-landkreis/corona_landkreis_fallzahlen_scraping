@@ -1,7 +1,7 @@
 FROM python:3
 
 RUN apt-get update && apt-get install -y sudo vim git locales locales-all less
-RUN pip3 install bs4 requests cachecontrol[filecache] lockfile
+RUN pip3 install bs4 requests cachecontrol[filecache] lockfile tqdm
 RUN adduser python
 RUN echo "python ALL=(ALL) NOPASSWD: ALL" >  /etc/sudoers.d/python
 
