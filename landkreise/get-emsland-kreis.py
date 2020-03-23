@@ -23,10 +23,11 @@ text=bs.getText()
 status_raw = re.findall("Stand .* Uhr",text)[0]
 status= datetime.datetime.strptime(status_raw, 'Stand %d.%m.%Y, %H Uhr').strftime("%Y-%m-%d %H:%M")
 
-cases_raw = re.findall(cases_pattern,text)[0]
-cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
-add_to_database(DISTRICT_UID, status, cases)
+#cases_raw = re.findall(cases_pattern,text)[0]
+#cases = int(re.findall(r'[0-9]+', cases_raw)[0])
+
+#add_to_database(DISTRICT_UID, status, cases)
 
 communities = {
     'Emsbüren': {'uid': '034540010010', 'cases': -1},
@@ -88,14 +89,20 @@ communities = {
     'Lorup': {'uid': '034545409033', 'cases': -1},
     'Rastdorf': {'uid': '034545409042', 'cases': -1},
     'Vrees': {'uid': '034545409055', 'cases': -1},
-    'Werlte, Stadt': {'uid': '034545409057', 'cases': -1}
+    'Werlte': {'uid': '034545409057', 'cases': -1},
+    'Nordhümmling': {'uid' : '034545406', 'cases':-1,}
 }
 
+
+total_cases=0
 community_pattern = ".*%s.*"
 for key in communities.keys():
     textbox = bs.find(class_="content__textbox")
     community_cases = textbox.findAll(text=re.compile(community_pattern % key))
     if 0 < len(community_cases):
-        cases = community_cases[0].findNext('td').get_text()
-        communities[key]['cases'] = int(cases)
+        cases = int(community_cases[0].findNext('td').get_text())
+        total_cases += cases
+        communities[key]['cases'] = cases
         add_to_database(communities[key]['uid'], status, communities[key]['cases'], key, DISTRICT_UID)
+
+add_to_database(DISTRICT_UID, status, total_cases)
