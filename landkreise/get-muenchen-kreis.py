@@ -22,7 +22,7 @@ full_text = helper.clear_text_of_ambigous_chars(bs.getText())
 
 text = bs.findAll(text=re.compile(status_pattern))[0]
 status_raw = re.findall(status_pattern,text)[0]
-status = datetime.datetime.strptime(status_raw, '(Stand: %d.%m.%Y)').strftime("%Y-%m-%d")
+status = datetime.datetime.strptime(status_raw, '(Stand: %d.%m.%Y, %H:%M Uhr)').strftime("%Y-%m-%d")
 
 cases_raw = re.findall(cases_pattern, full_text)[0]
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
