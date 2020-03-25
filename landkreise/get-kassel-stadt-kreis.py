@@ -26,7 +26,7 @@ for row in rows:
     
 
 status_raw = re.findall("Stand: .* Uhr", bs.getText())[0]
-status= datetime.datetime.strptime(status_raw, 'Stand: %d. %B %Y; %H Uhr').strftime("%Y-%m-%d %H:%M:%S")
+status= datetime.datetime.strptime(status_raw, 'Stand: %d. %B %Y; %H.%M Uhr').strftime("%Y-%m-%d %H:%M:%S")
 
 cases_stadt = data[0][1]
 cases_kreis = data[1][1]

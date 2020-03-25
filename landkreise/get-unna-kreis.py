@@ -24,4 +24,7 @@ status= datetime.datetime.strptime(status_raw, '%d.%m.%Y').strftime("%Y-%m-%d")
 cases_raw = re.findall(cases_pattern,text)[0]
 cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
+# wrong number gets added
+#print(cases)
+raise Error("needs fix")
 add_to_database("05978", status, cases, "Kreis Unna")
