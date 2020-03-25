@@ -8,7 +8,7 @@ import re
 
 #import sys
 #reload(sys) # only on some installations ;-)
-sys.setdefaultencoding('utf-8') # only on some installations ;-)
+#sys.setdefaultencoding('utf-8') # only on some installations ;-)
 
 # for some german month names, e.g. März
 import locale
@@ -31,6 +31,22 @@ recover_pattern = "Davon gelten ([0-9]+) Personen als genesen"
 table_pattern = "<tbody>[\s\S]*?Anzahl von heute[\s\S]*?</tbody>"
 row_pattern = "<tr>([\s\S]*?)</tr>"
 col_pattern = "<td><p class=\"paragraph\">([\s\S]*?)</p></td>"
+
+community = {
+    'Borgholzhausen': { 'uid': '05754004' },
+    'Gütersloh': { 'uid': '05754008' },
+    'Halle': { 'uid': '05754012' },
+    'Harsewinkel': { 'uid': '05754016' },
+    'Herzebrock-Clarholz': { 'uid': '05754020' },
+    'Langenberg': { 'uid': '05754024' },
+    'Rheda-Wiedenbrück': { 'uid': '05754028' },
+    'Rietberg': { 'uid': '05754032' },
+    'Schloß Holte-Stukenbrock': { 'uid': '05754036' },
+    'Steinhagen': { 'uid': '05754040' },
+    'Verl': { 'uid': '05754044' },
+    'Versmold': { 'uid': '05754048' },
+    'Werther': { 'uid': '05754052' }
+}
 
 def getPage(url, parsed):
     req = requests.get(url)
@@ -89,6 +105,9 @@ for one_teaser in teaser_raw:
                         today = cols[1]
                         yesterday = cols[2]
                         print("\t\tin " + city + " " + str(today) + " (" + str(yesterday) + ")")
+                        if city in community:
+                            add_to_database(community[city]['uid'], str(statusDate), today, "Kreis Gütersloh, Stadt " + city, "05754")
+
         else:
             print("do not have exactly one meta description: " + str(len(one_meta_description)))    
     else:
