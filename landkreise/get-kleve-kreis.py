@@ -14,12 +14,12 @@ main_url = "https://www.kreis-kleve.de/de/fachbereich5/coronavirus/"
 req = requests.get(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
-cases_pattern = "Kreis Kleve insgesamt [0-9]+ Corona-Virus-Infektionen"
+cases_pattern = "insgesamt [0-9]+ bestätigte"
 
 text=bs.getText()
 
-status_raw = re.findall("Stand .*? Uhr",text)[0]
-status= datetime.datetime.strptime(status_raw, 'Stand %d. %B %Y, %H.%M Uhr').strftime("%Y-%m-%d %H:%M")
+status_raw = re.findall("Stand .*?\)",text)[0]
+status= datetime.datetime.strptime(status_raw, 'Stand %d.%m.%Y)').strftime("%Y-%m-%d")
 
 
 cases_raw = re.findall(cases_pattern,text)[0]
