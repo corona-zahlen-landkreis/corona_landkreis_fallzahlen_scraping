@@ -1,3 +1,12 @@
+#!/bin/sh
+if type -p python3; then
+  # for systems that have only python3 as default
+  python() {
+    python3 "$@"
+  }
+else
+	echo "WARNING: scripts & libraries require python3!"
+fi
 python get-warendorf-kreis.py
 python get-harburg-kreis.py
 python get-ostalbkreis.py
