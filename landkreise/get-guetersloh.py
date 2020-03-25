@@ -78,9 +78,7 @@ def findNumber(pattern, string):
 
 overviewPage = getPage(main_url, False)
 
-
 teaser_raw = re.findall(teaser_pattern, overviewPage)
-print ("overall press releases for Gütersloh: " + str(len(teaser_raw)))
 
 for one_teaser in teaser_raw:
     one_page_url = re.findall(link_pattern, one_teaser)
@@ -90,23 +88,26 @@ for one_teaser in teaser_raw:
         one_meta_description = re.findall(meta_description_pattern, one_page)
         if len(one_meta_description) == 1:
             statusDate = getStatusDate(one_meta_description[0])
-            cases = findNumber(cases_pattern, one_meta_description[0])
-            recovered = findNumber(recover_pattern, one_meta_description[0])
-            print("StatusDate: " + str(statusDate) + ", cases: " + str(cases) + ", recovered: " + str(recovered) + ", url: " + str(url))
-            add_to_database("05754", str(statusDate), cases, "Kreis Gütersloh")
 
-            table_raw = re.findall(table_pattern, one_page)
-            if len(table_raw) == 1:
-                rows = re.findall(row_pattern, table_raw[0])
-                for row in rows:
-                    cols = re.findall(col_pattern, row)
-                    if len(cols) == 3:
-                        city = cols[0]
-                        today = cols[1]
-                        yesterday = cols[2]
-                        print("\t\tin " + city + " " + str(today) + " (" + str(yesterday) + ")")
-                        if city in community:
-                            add_to_database(community[city]['uid'], str(statusDate), today, "Kreis Gütersloh, Stadt " + city, "05754")
+            if statusDate != None:
+                status = statusDate.strftime("%Y-%m-%d %H:%M")    
+
+                cases = findNumber(cases_pattern, one_meta_description[0])
+                recovered = findNumber(recover_pattern, one_meta_description[0])
+                if cases != None:
+                    add_to_database("05754", status, cases, "Kreis Gütersloh")
+
+                table_raw = re.findall(table_pattern, one_page)
+                if len(table_raw) == 1:
+                    rows = re.findall(row_pattern, table_raw[0])
+                    for row in rows:
+                        cols = re.findall(col_pattern, row)
+                        if len(cols) == 3:
+                            city = cols[0]
+                            today = cols[1]
+                            yesterday = cols[2]
+                            if city in community and today != None:
+                                    add_to_database(community[city]['uid'], status, today, "Kreis Gütersloh, Stadt " + city, "05754")
 
         else:
             print("do not have exactly one meta description: " + str(len(one_meta_description)))    
