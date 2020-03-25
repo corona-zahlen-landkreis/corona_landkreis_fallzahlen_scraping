@@ -2,7 +2,7 @@ import re
 import datetime
 import locale
 import logging
-
+from email.utils import parsedate
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,10 @@ date_regexes = {
 
     }
 
+def parse_dateheader(datestring):
+    return datetime.datetime(*parsedate(datestring)[:6])
+
+
 def check_and_replace_year(date_string):
     # TODO this is not particular safe, for example if we switched the dateformat to military style.
     if re.match("1900", date_string):
@@ -54,18 +58,24 @@ def extract_case_num_directregex(text, regex, match, source=None):
     except (IndexError, ValueError) as e:
         raise ParsingError((regex, source), 'Failed to match %r in %s : %s', e)
 
-def genfunc_dateformats_parser(default=datetime.datetime.now(), *date_formats, locales=["de_DE.utf-8"]):
-    def parse_date(date_value):
+def genfunc_dateformats_parser(gen_default=datetime.datetime.now(), *date_formats, locales=["de_DE.utf-8"]):
+    def parse_date(date_value,default=gen_default):
+        errors = []
         for date_format in date_formats:
             for oneLocale in locales:
                 try:
                     locale.setlocale(locale.LC_ALL, oneLocale)
-                    return datetime.datetime.strptime(date_value,  date_format)
-                except (ValueError, TypeError):
+                    result = datetime.datetime.strptime(date_value, date_format)
+                    if result.date().year == 1900 and type(default) == datetime.datetime:
+                        result = result.replace(year=default.date().year)
+                    return result
+                except Exception as e:
+                    errors.append("%s value=%r format=%r (locale=%s)" % (e,date_value,date_format,oneLocale))
                     continue
+        logger.warn("All date conversions failed: %s" % '\n                  '.join(errors))
         return default
     # set name of conversion function to something more useful
-    namext = ("_%s_" % default) + "_".join(str(df) for df in date_formats)
+    namext = ("_%s_" % gen_default) + "_".join(str(df) for df in date_formats)
     if hasattr(parse_date, "__qualname__"):
         parse_date.__qualname__ += namext
     parse_date.__name__ += namext

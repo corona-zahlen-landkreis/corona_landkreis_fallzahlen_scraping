@@ -8,9 +8,10 @@ import random
 import requests
 import cachecontrol
 from cachecontrol.caches.file_cache import FileCache
+from cachecontrol.heuristics import ExpiresAfter
 import pathlib
 import logging
-
+from helper import parse_dateheader
 import locale
 locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 from database_interface import *
@@ -63,19 +64,23 @@ def scrape(url, community_id, cases_func, date_func = None, name="", parent_comm
     bs = BeautifulSoup(req.text, "html.parser")
     if options.get('debug'):
         logger.debug(repr(bs.text))
-    date = time_stamp() if date_func is None else date_func(bs)
+
+    date = time_stamp() if date_func is None else date_func(bs, default=parse_dateheader(req.headers['Date']))
     cases = cases_func(bs)
     if options.get('debug'):
         logger.debug(str(cases) + " Fälle am " + date)
     else:
-        add_to_database(community_id, date, cases, name, parent_community_id, url, req.headers['Date'])
+        download_stamp = req.headers['Date']
+        add_to_database(community_id, date, cases, name, parent_community_id, url, download_stamp)
 
 def request_cache():
     data_dir = pathlib.Path(__file__).parent.joinpath('data')
     cache_dir = data_dir.joinpath('.webcache').absolute()
     disk_cache = FileCache(cache_dir, forever=True)
     logger.debug(cachecontrol.caches.file_cache.url_to_file_path('https://google.com', disk_cache))
-    return cachecontrol.CacheControl(requests.Session(), cache=disk_cache)
+
+    #adapter = CacheControlAdapter(heuristic=ExpiresAfter(days=1))
+    return cachecontrol.CacheControl(requests.Session(), cache=disk_cache, heuristic=ExpiresAfter(hours=1))
 
 def request_url(url,headers=RANDOM_CLIENT_HEADERS,options={}):
     resp = request_cache().get(url, headers=headers, cookies=options.get('cookies'))

@@ -9,7 +9,7 @@ import re
 import locale
 import logging
 import urllib.parse
-from helper import ParsingError
+from helper import ParsingError,parse_dateheader
 
 locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 
@@ -32,8 +32,14 @@ logger.info('Found %s press releases' % len(urls))
 logger.debug('URLs: %s' % "\n".join(urls))
 
 date_regex = "Stand: .*? Uhr"
-date_formats = 'Stand: %A, %d.%m.%Y -  %H:%M Uhr', 'Stand: %d.%m., %d.%m.%Y -  %H:%M Uhr'
-date_convert = helper.genfunc_dateformats_parser(datetime.datetime.now(), date_formats)
+date_formats = 'Stand: %A, %d.%m.%Y -  %H:%M Uhr', \
+               'Stand: %d.%m., %H.%M Uhr', \
+               'Stand: %d. %B, %H:%M Uhr', \
+               'Stand: %d. %B, %H.%M Uhr', \
+               'Stand: %d.%m., Zeit %H Uhr', \
+               'Stand: %d.%m., %H Uhr'
+#date_convert = helper.genfunc_dateformats_parser(datetime.datetime.now(), *date_formats)
+
 #HEAD#cases_pattern = "sind insgesamt [0-9]+"
 community_matcher = [
         { 'cid': '05774'       , 'name': 'Kreis Paderborn'         , 'regex': '[0-9]+\s+bestätigte'        , 'parent': None   },
@@ -69,7 +75,7 @@ for url in urls:
     for community in community_matcher:
         try:
             case_func = lambda bs: helper.extract_case_num_directregex(bs.text, community['regex'],0,url)
-            date_func = lambda bs: helper.extract_status_date_directregex(bs.text, date_regex, date_convert, 0, "%Y-%m-%d", url)
+            date_func = lambda bs, default: helper.extract_status_date_directregex(bs.text, date_regex, helper.genfunc_dateformats_parser(default, *date_formats), 0, "%Y-%m-%d", url)
             scrape.scrape(url, community['cid'], case_func, date_func, community['name'], community['parent'])
         except ParsingError as e:
             if url not in known_broken_urls:
