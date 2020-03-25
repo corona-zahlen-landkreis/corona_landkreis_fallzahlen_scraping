@@ -6,9 +6,9 @@ import requests
 import datetime
 import re
 
-import sys
-#reload(sys)
-#sys.setdefaultencoding('utf-8')
+#import sys
+#reload(sys) # only on some installations ;-)
+#sys.setdefaultencoding('utf-8') # only on some installations ;-)
 
 # for some german month names, e.g. März
 import locale
@@ -16,28 +16,100 @@ locale.setlocale(locale.LC_ALL, "de_DE.utf-8")
 
 from database_interface import *
 
-main_url = "https://www.kreis-guetersloh.de/aktuelles/corona/"
+# all pages are on this site
+site_url = "https://www.kreis-guetersloh.de"
 
-req = requests.get(main_url)
-bs = BeautifulSoup(req.text, "html.parser")
+# index page of press release from district assocation
+main_url = site_url + "/aktuelles/corona/pressemitteilungen-coronavirus/"
+teaser_pattern = "<a.*?Aktuelle Situation im Kreis Gütersloh.*?</a>"
+link_pattern = "href=\"(.*?)\""
 
-cases_pattern = "insgesamt [0-9]+ laborbest"
+# pattern to scrap information on press release pages
+meta_description_pattern = "<meta name=\"description\" content=\"([\s\S]*?)\"/>"
+cases_pattern = "insgesamt ([0-9]+) laborbestätigte"
+recover_pattern = "Davon gelten ([0-9]+) Personen als genesen"
+table_pattern = "<tbody>[\s\S]*?Anzahl von heute[\s\S]*?</tbody>"
+row_pattern = "<tr>([\s\S]*?)</tr>"
+col_pattern = "<td><p class=\"paragraph\">([\s\S]*?)</p></td>"
 
-# I don't know, why I need to do this on my osx
-text=bs.getText()
-#.decode("UTF-8").encode("UTF-8")
+community = {
+    'Borgholzhausen': { 'uid': '05754004' },
+    'Gütersloh': { 'uid': '05754008' },
+    'Halle': { 'uid': '05754012' },
+    'Harsewinkel': { 'uid': '05754016' },
+    'Herzebrock-Clarholz': { 'uid': '05754020' },
+    'Langenberg': { 'uid': '05754024' },
+    'Rheda-Wiedenbrück': { 'uid': '05754028' },
+    'Rietberg': { 'uid': '05754032' },
+    'Schloß Holte-Stukenbrock': { 'uid': '05754036' },
+    'Steinhagen': { 'uid': '05754040' },
+    'Verl': { 'uid': '05754044' },
+    'Versmold': { 'uid': '05754048' },
+    'Werther': { 'uid': '05754052' }
+}
 
-# Im Kreis Gütersloh gibt es aktuell, das heißt zum Stand: 17. März, 14:00 Uhr, insgesamt 91 laborbestätigte Coronainfektionen.
+def getPage(url, parsed):
+    req = requests.get(url)
+    text = req.text
+    if parsed:
+        text = BeautifulSoup(text, "html.parser")
+    #text=text.decode("UTF-8").encode("UTF-8") # only on some installations ;-)
+    return text
+    
 
-information_raw = re.findall("Im Kreis Gütersloh gibt es aktuell, das heißt zum Stand: .*? Uhr, insgesamt [0-9]+ laborbestätigte Coronainfektionen.", text)
+def getStatusDate(string):
+    status_raw = re.findall("zum Stand: (.*?) Uhr", string)
+    if len(status_raw) == 1:
+        if re.match("\d+\. [A-Za-z0-9äöü]+\, \d+\:\d+", status_raw[0]):
+            statusDate = datetime.datetime.strptime(status_raw[0], '%d. %B, %H:%M')
+        elif re.match("\d+\. [A-Za-z0-9äöü]+\, \d+\.\d+", status_raw[0]):
+            statusDate = datetime.datetime.strptime(status_raw[0], '%d. %B, %H.%M')
+        elif re.match("\d+\. [A-Za-z0-9äöü]+\, \d+", status_raw[0]):
+            statusDate = datetime.datetime.strptime(status_raw[0], '%d. %B, %H')
+        statusDate = statusDate.replace(year = 2020)
+        return statusDate
+    elif len(status_raw) > 1:
+        print("have more than one 'zum Stand: .*? Uhr': " + str(len(status_raw)))    
 
-for one_info in information_raw:
-    status_raw = re.findall("zum Stand: .*? Uhr", one_info)[0]
-    try:
-        statusDate = datetime.datetime.strptime(status_raw, 'zum Stand: %d. %B, %H:%M Uhr')
-    except ValueError as ve:
-        statusDate = datetime.datetime.strptime(status_raw, 'zum Stand: %d. %B, %H.%M Uhr')
-    status = statusDate.replace(year = 2020).strftime("%Y-%m-%d %H:%M")    
-    cases_raw = re.findall("insgesamt [0-9]+ laborbest", one_info)[0]
-    cases = int(re.findall(r'[0-9]+', cases_raw)[0])
-    add_to_database("05754", status, cases, "Kreis Gütersloh")
+def findNumber(pattern, string):
+    number_raw = re.findall(pattern, string)
+    if len(number_raw) == 1:
+        return int(number_raw[0])
+
+overviewPage = getPage(main_url, False)
+
+teaser_raw = re.findall(teaser_pattern, overviewPage)
+
+for one_teaser in teaser_raw:
+    one_page_url = re.findall(link_pattern, one_teaser)
+    if len(one_page_url) == 1:
+        url = site_url + one_page_url[0]
+        one_page = getPage(url, False)
+        one_meta_description = re.findall(meta_description_pattern, one_page)
+        if len(one_meta_description) == 1:
+            statusDate = getStatusDate(one_meta_description[0])
+
+            if statusDate != None:
+                status = statusDate.strftime("%Y-%m-%d %H:%M")    
+
+                cases = findNumber(cases_pattern, one_meta_description[0])
+                recovered = findNumber(recover_pattern, one_meta_description[0])
+                if cases != None:
+                    add_to_database("05754", status, cases, "Kreis Gütersloh")
+
+                table_raw = re.findall(table_pattern, one_page)
+                if len(table_raw) == 1:
+                    rows = re.findall(row_pattern, table_raw[0])
+                    for row in rows:
+                        cols = re.findall(col_pattern, row)
+                        if len(cols) == 3:
+                            city = cols[0]
+                            today = cols[1]
+                            yesterday = cols[2]
+                            if city in community and today != None:
+                                    add_to_database(community[city]['uid'], status, today, "Kreis Gütersloh, Stadt " + city, "05754")
+
+        else:
+            print("do not have exactly one meta description: " + str(len(one_meta_description)))    
+    else:
+        print("do not have exactly one 'href': " + str(len(one_page_url)))
