@@ -47,12 +47,12 @@ def get_status(text,occurrence=0):
         if "%H" in date_regexes.get(regex): has_hour=True
         if(current_find): break;
     
-    if not current_find:
-        # try dateparser
-        # NOTE: dateparser is still not very good and requires to remove brackets etc!
-        from dateparser.search import search_dates
-        text = remove_chars_from_text(text,["(",")"])
-        result = search_dates(text, languages=["de"])
+    #if not current_find:
+    #    # try dateparser
+    #    # NOTE: dateparser is still not very good and requires to remove brackets etc!
+    #    from dateparser.search import search_dates
+    #    text = remove_chars_from_text(text,["(",")"])
+    #    result = search_dates(text, languages=["de"])
         
         
     if has_hour:
@@ -60,7 +60,6 @@ def get_status(text,occurrence=0):
     else:
         date_format = "%Y-%m-%d"
         
-
     # check if there is an hour (if not, do not output any)
     date = datetime.datetime.strptime(current_find,date_regexes.get(regex)).strftime(date_format)   
     
