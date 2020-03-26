@@ -52,7 +52,7 @@ def get_status(text,occurrence=0):
             current_find = re.findall(regex, text)[occurrence]
             if "%H" in date_regexes.get(regex): has_hour=True
             if(current_find): break;
-        except:
+        except IndexError:
             pass
         
     #if not current_find:
