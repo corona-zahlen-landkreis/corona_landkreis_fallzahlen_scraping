@@ -4,7 +4,9 @@ import locale
 
 # NOTE: these have to be sorted, with the most general regex at the bottom!
 date_regexes = {
-        "Stand\d+.\d+.\d+" : "Stand%d.%m.%Y"
+        "Stand\d+.\d+.\d+" : "Stand%d.%m.%Y",
+	"Stand:\d+\.\w,\d+Uhr" : "Stand:%d.%B,%HUhr",
+	"Stand:\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand:%d.%m.%Y,%H.%MUhr"
     }
 
 def check_and_replace_year(date_string):
@@ -40,13 +42,19 @@ def clear_text_of_ambigous_chars(text):
 def get_status(text,occurrence=0):
     text = clear_text_of_ambigous_chars(text)
     text = remove_chars_from_text(text,["\n"," "])
+#    print(text)
+
     has_hour=False
+    current_find=""
     for regex in date_regexes:
         # try to match against the current regex
-        current_find = re.findall(regex, text)[occurrence]
-        if "%H" in date_regexes.get(regex): has_hour=True
-        if(current_find): break;
-    
+        try:
+            current_find = re.findall(regex, text)[occurrence]
+            if "%H" in date_regexes.get(regex): has_hour=True
+            if(current_find): break;
+        except:
+            pass
+        
     #if not current_find:
     #    # try dateparser
     #    # NOTE: dateparser is still not very good and requires to remove brackets etc!
