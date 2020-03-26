@@ -2,8 +2,13 @@ import re
 import datetime
 import locale
 
+# NOTE: these have to be sorted, with the most general regex at the bottom!
+date_regexes = {
+        "Stand\d+.\d+.\d+" : "Stand%d.%m.%Y"
+    }
 
 def check_and_replace_year(date_string):
+    # TODO this is not particular safe, for example if we switched the dateformat to military style.
     if re.match("1900", date_string):
         return date_string.replace("1900", datetime.date.today().strftime("%Y"))
     else:
@@ -31,6 +36,42 @@ def extract_status_date_directregex(text, regexmatch, input_date_format, match, 
 
 def clear_text_of_ambigous_chars(text):
     return text.replace("\xa0", " ").replace("\r","\n")
+
+def get_status(text,occurrence=0):
+    text = clear_text_of_ambigous_chars(text)
+    text = remove_chars_from_text(text,["\n"," "])
+    has_hour=False
+    for regex in date_regexes:
+        # try to match against the current regex
+        current_find = re.findall(regex, text)[occurrence]
+        if "%H" in date_regexes.get(regex): has_hour=True
+        if(current_find): break;
+    
+    if not current_find:
+        # try dateparser
+        # NOTE: dateparser is still not very good and requires to remove brackets etc!
+        from dateparser.search import search_dates
+        text = remove_chars_from_text(text,["(",")"])
+        result = search_dates(text, languages=["de"])
+        
+        
+    if has_hour:
+        date_format = "%Y-%m-%d %H:%M:%S"
+    else:
+        date_format = "%Y-%m-%d"
+        
+
+    # check if there is an hour (if not, do not output any)
+    date = datetime.datetime.strptime(current_find,date_regexes.get(regex)).strftime(date_format)   
+    
+    date = check_and_replace_year(date)       # check if there is a year
+    
+    return date
+       
+def remove_chars_from_text(text,what_to_remove):
+    for entry in what_to_remove:
+        text=text.replace(entry,"")
+    return text
 
 def get_number_only(text):
     return int(re.findall("[0-9]+", text)[0])
