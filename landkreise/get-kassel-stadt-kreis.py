@@ -6,11 +6,13 @@ import re
 import locale
 locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 
+import scrape
+import helper
 from database_interface import *
 
 main_url = "https://www.kassel.de/aktuelles/aktuelle-meldungen/coronavirus.php"
 
-req=requests.get(main_url)
+req=scrape.request_url(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
 
@@ -26,7 +28,7 @@ for row in rows:
     
 
 status_raw = re.findall("Stand: .* Uhr", bs.getText())[0]
-status= datetime.datetime.strptime(status_raw, 'Stand: %d. %B %Y; %H Uhr').strftime("%Y-%m-%d %H:%M:%S")
+status = helper.get_status(status_raw)
 
 cases_stadt = data[0][1]
 cases_kreis = data[1][1]

@@ -8,6 +8,9 @@ date_regexes = {
 
 	"Stand:\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand:%d.%m.%Y,%H.%MUhr",
 	"Stand\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand%d.%m.%Y,%H.%MUhr",
+	
+	"Stand:\d+\.\w+\d+;\d+\.\d+Uhr" : "Stand:%d.%B%Y;%H.%MUhr",
+
 
 	"Stand\d+\.\d+\.\d+-\d+:\d+Uhr":"Stand%d.%m.%Y-%H:%MUhr",
     "Stand\d+.\d+.\d+" : "Stand%d.%m.%Y",
@@ -48,14 +51,14 @@ def clear_text_of_ambigous_chars(text):
 def get_status(text,occurrence=0):
     text = clear_text_of_ambigous_chars(text)
     text = remove_chars_from_text(text,["\n"," "])
-#    print(text)
+    #print(text)
 
     has_hour=False
     current_find=""
     for regex in date_regexes:
         # try to match against the current regex
         try:
-            current_find = re.findall(regex, text)[occurrence]
+            current_find = re.findall(regex, text,re.UNICODE)[occurrence]
             if "%H" in date_regexes.get(regex): has_hour=True
             if(current_find): break;
         except IndexError:
