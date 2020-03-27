@@ -7,17 +7,22 @@ import re
 import locale
 locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 
+import scrape
+import helper
 from database_interface import *
 
 main_url = "https://www.rhein-neckar-kreis.de/,Lde/start/landratsamt/coronavirus+-+faq.html"
 
-req = requests.get(main_url)
+req = scrape.request_url(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
-text = bs.findAll('p',{'class':'basecontent-line-break-text'})[1].getText()
+text_loc = bs.find('h3',text="Aktuelle Fallzahlen aus dem Rhein-Neckar-Kreis")
+#,{'class':'basecontent-line-break-text'})
+text = text_loc.findNext('div').getText()
+text = text.replace("\n", " ")
 
-cases_rheinneckarkreis_pattern = "[0-9]+ im Rhein"
-cases_heidelberg_pattern = "[0-9]+ im Stadtgebiet Heidelberg"
+cases_rheinneckarkreis_pattern = "Rhein-Neckar-Kreis beträgt die Zahl der positiv getesteten Personen [0-9]+"
+cases_heidelberg_pattern = "im Stadtgebiet Heidelberg [0-9]+"
 
 cases_rheinneckarkreis_raw = re.findall(cases_rheinneckarkreis_pattern,text)[0]
 cases_rheinneckarkreis = int(re.findall(r'[0-9]+', cases_rheinneckarkreis_raw)[0])
