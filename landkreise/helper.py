@@ -4,10 +4,12 @@ import locale
 
 # NOTE: these have to be sorted, with the most general regex at the bottom!
 date_regexes = {
-        "Stand\d+.\d+.\d+" : "Stand%d.%m.%Y",
 	"Stand:\d+\.\w,\d+Uhr" : "Stand:%d.%B,%HUhr",
 	"Stand:\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand:%d.%m.%Y,%H.%MUhr",
+	"Stand\d+\.\d+\.\d+-\d+:\d+Uhr":"Stand%d.%m.%Y-%H:%MUhr",
+        "Stand\d+.\d+.\d+" : "Stand%d.%m.%Y",
 	"\d+\.\d+\.\d+":"%d.%m.%Y"
+
     }
 
 def check_and_replace_year(date_string):
