@@ -4,7 +4,7 @@ import locale
 
 # NOTE: these have to be sorted, with the most general regex at the bottom!
 date_regexes = {
-	"Stand:\d+\.\w,\d+Uhr" : "Stand:%d.%B,%HUhr",
+	"Stand:\d+\.\w+,\d+Uhr" : "Stand:%d.%B,%HUhr",
 
 	"Stand:\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand:%d.%m.%Y,%H.%MUhr",
 	"Stand\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand%d.%m.%Y,%H.%MUhr",
@@ -13,7 +13,8 @@ date_regexes = {
 
 
 	"Stand\d+\.\d+\.\d+-\d+:\d+Uhr":"Stand%d.%m.%Y-%H:%MUhr",
-    "Stand\d+.\d+.\d+" : "Stand%d.%m.%Y",
+        "Stand\d+.\d+.\d+" : "Stand%d.%m.%Y",
+        "Stand:\w+,\d+\.\w+\d+": "Stand:%A,%d.%B%Y",
 	"\d+\.\d+\.\d+":"%d.%m.%Y"
 
     }
