@@ -11,7 +11,7 @@ req = requests.get(main_url)
 
 bs = BeautifulSoup(req.text, "html.parser")
 
-table = bs.find(lambda tag: tag.name=='table' and tag['border']=="1") 
+table = bs.findAll(lambda tag: tag.name=='table' and tag['border']=="1")[1]
 
 row = table.findAll(lambda tag: tag.name=='tr')[1].find_all('td')
 
