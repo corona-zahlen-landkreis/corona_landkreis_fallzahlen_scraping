@@ -33,6 +33,6 @@ data=data[0]
 status_raw = re.findall("Stand: .*? Uhr",text)[0]
 status= datetime.datetime.strptime(status_raw, 'Stand: %d. %B %Y, %H Uhr').strftime("%Y-%m-%d %H:%M")
 
-cases = int(data[1].split(" ",1)[0])
+cases = int(data[1].split("m",1)[0])
 
 add_to_database("14626", status, cases, "Kreis Goerlitz")
