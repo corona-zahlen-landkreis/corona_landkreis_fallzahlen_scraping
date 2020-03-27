@@ -5,6 +5,9 @@ import datetime
 import re
 import locale
 
+
+import scrape
+import helper
 from database_interface import *
 
 DISTRICT_UID = "05566"
@@ -12,22 +15,17 @@ DISTRICT_UID = "05566"
 locale.setlocale(locale.LC_ALL, 'de_DE.utf-8')
 main_url = "https://www.kreis-steinfurt.de/kv_steinfurt/Aktuelles/Slider/Informationen%20Coronavirus"
 
-req = requests.get(main_url)
+req = scrape.request_url(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
-date_raw = bs.findAll(text=re.compile("Pressemitteilung von"))[0]
-date = datetime.datetime.strptime(date_raw, 'Pressemitteilung von %A, %d. %B %Y\nKreis Steinfurt')
+text = helper.clear_text_of_ambigous_chars(bs.text)
+text = helper.remove_chars_from_text(text,["\n"])
 
-time_raw = bs.findAll(text=re.compile("Im Kreis Steinfurt sind mit Stand von\n" + date.strftime("%A, %d. %B")))[0]
-time = datetime.datetime.strptime(time_raw.split("Uhr")[0],
-                                  ("Kreis Steinfurt. Im Kreis Steinfurt sind mit Stand von\n" +
-                                   date.strftime("%A, %d. %B") + ", %H.%M ")).time()
+status_raw = re.findall("mit Stand von .*?Uhr",text)[0]
+status = helper.get_status(status_raw)
 
-datetime_raw = datetime.datetime.combine(date, time)
-status = datetime_raw.strftime("%Y-%m-%d %H:%M:%S")
-
-cases_raw = bs.findAll(text=re.compile("Uhr, [0-9]+ Menschen nachweislich mit dem"))[0]
-cases = int(re.findall(r'[0-9]+', cases_raw)[3])
+cases_raw = bs.findAll(text=re.compile("[0-9]+ Personen im Kreis"))[0]
+cases = int(re.findall(r'[0-9]+', cases_raw)[0])
 
 add_to_database(DISTRICT_UID, status, cases, "Kreis Steinfurt")
 
