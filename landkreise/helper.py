@@ -8,8 +8,12 @@ date_regexes = {
 
 	"Stand:\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand:%d.%m.%Y,%H.%MUhr",
 	"Stand\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand%d.%m.%Y,%H.%MUhr",
-	
+    
+    
+    "Stand\d+\.\w+,\d+Uhr" : "Stand%d.%B,%HUhr",
+
 	"Stand:\d+\.\w+\d+;\d+\.\d+Uhr" : "Stand:%d.%B%Y;%H.%MUhr",
+
 
 	"mitStandvon\w+,\d+\.\w+,\d+\.\d+Uhr":"mitStandvon%A,%d.%B,%H.%MUhr",
 
@@ -54,35 +58,39 @@ def clear_text_of_ambigous_chars(text):
 def get_status(text,occurrence=0):
     text = clear_text_of_ambigous_chars(text)
     text = remove_chars_from_text(text,["\n"," "])
+    
     #print(text)
 
     has_hour=False
     current_find=""
+    date=None
     for regex in date_regexes:
         # try to match against the current regex
         try:
             current_find = re.findall(regex, text,re.UNICODE)[occurrence]
             if "%H" in date_regexes.get(regex): has_hour=True
-            if(current_find): break;
+            if(current_find): 
+                #if not current_find:
+                #    # try dateparser
+                #    # NOTE: dateparser is still not very good and requires to remove brackets etc!
+                #    from dateparser.search import search_dates
+                #    text = remove_chars_from_text(text,["(",")"])
+                #    result = search_dates(text, languages=["de"])
+
+
+                if has_hour:
+                    date_format = "%Y-%m-%d %H:%M:%S"
+                else:
+                    date_format = "%Y-%m-%d"
+                # check if there is an hour (if not, do not output any)
+                date = datetime.datetime.strptime(current_find,date_regexes.get(regex)).strftime(date_format)   
+                break;
         except IndexError:
             pass
         
-    #if not current_find:
-    #    # try dateparser
-    #    # NOTE: dateparser is still not very good and requires to remove brackets etc!
-    #    from dateparser.search import search_dates
-    #    text = remove_chars_from_text(text,["(",")"])
-    #    result = search_dates(text, languages=["de"])
-        
-        
-    if has_hour:
-        date_format = "%Y-%m-%d %H:%M:%S"
-    else:
-        date_format = "%Y-%m-%d"
-        
-    # check if there is an hour (if not, do not output any)
-    date = datetime.datetime.strptime(current_find,date_regexes.get(regex)).strftime(date_format)   
-    
+
+    if not date:
+        raise InvalidDateException(text)
     date = check_and_replace_year(date)       # check if there is a year
     
     return date
@@ -104,3 +112,9 @@ def get_table(table):
         cols = [ele.text.strip() for ele in cols]
         data.append([ele for ele in cols if ele]) # Get rid of empty values
     return data
+
+
+class InvalidDateException(Exception):
+    def __init__(self, message, text=None):
+        super().__init__(message)
+        print(text)
