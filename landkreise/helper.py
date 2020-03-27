@@ -4,7 +4,7 @@ import locale
 
 # NOTE: these have to be sorted, with the most general regex at the bottom!
 date_regexes = {
-	"Stand:\d+\.\w+,\d+Uhr" : "Stand:%d.%B,%HUhr",
+	"Stand:\d+\.\w,\d+Uhr" : "Stand:%d.%B,%HUhr",
 
 	"Stand:\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand:%d.%m.%Y,%H.%MUhr",
 	"Stand\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand%d.%m.%Y,%H.%MUhr",
@@ -33,15 +33,17 @@ def extract_case_num_directregex(text, regex, match):
     cases_raw = re.findall(regex,text)[match]
     return get_number_only(cases_raw)
 
-def extract_status_date(bs, prefix):
+def extract_status_date(bs, prefix, input_date_format, output_date_format="%Y-%m-%d %H:%M:%S"):
     locale.setlocale(locale.LC_ALL, "de_DE.utf-8")
     status_raw = bs.findAll(text=re.compile(prefix))[0]
-    return get_status(status_raw)
+    date_string = datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)
+    return check_and_replace_year(date_string)
 
-def extract_status_date_directregex(text, regexmatch, match):
+def extract_status_date_directregex(text, regexmatch, input_date_format, match, output_date_format="%Y-%m-%d %H:%M:%S"):
     locale.setlocale(locale.LC_ALL, "de_DE.utf-8")
     status_raw = re.findall(regexmatch,text)[match]
-    return get_status(status_raw)
+    date_string = datetime.datetime.strptime(status_raw, input_date_format).strftime(output_date_format)
+    return check_and_replace_year(date_string)
 
 def clear_text_of_ambigous_chars(text):
     return text.replace("\xa0", " ").replace("\r","\n")
