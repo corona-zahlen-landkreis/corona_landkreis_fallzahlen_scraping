@@ -4,7 +4,6 @@ import requests
 import datetime
 import re
 import locale
-import dateparser
 
 locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 import helper
@@ -18,15 +17,17 @@ req = scrape.request_url(main_url)
 
 bs = BeautifulSoup(req.text, "html.parser")
 
-table = bs.find('table')
+text_match = re.compile("Zahl erfasster Coronafälle im Landkreis Harburg")
+text_position = bs.find(text=text_match)
+table = text_position.findNext('table')
 
-data = helper.get_table(bs.find('table'))
+data = helper.get_table(table)
 
 # remove table head
-#data.pop(0)
+data.pop(0)
 
 for row in data:
-    status = dateparser.parse(row[0]).strftime("%Y-%m-%d")
+    status = helper.get_status(row[0])
     cases = int(row[1])
     add_to_database("03353", status, cases, "Kreis Harburg")
 
