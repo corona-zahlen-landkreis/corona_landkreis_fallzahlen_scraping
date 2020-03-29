@@ -7,11 +7,13 @@ import locale
 
 locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 
+import scrape
+import helper
 from database_interface import *
 
 main_url = "https://www.kreis-goerlitz.de/city_info/webaccessibility/index.cfm?item_id=873097"
 
-req=requests.get(main_url)
+req=scrape.request_url(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
 text=bs.getText()
@@ -30,8 +32,8 @@ for row in rows:
 
 data=data[0]
 
-status_raw = re.findall("Stand: .*? Uhr",text)[0]
-status= datetime.datetime.strptime(status_raw, 'Stand: %d. %B %Y, %H Uhr').strftime("%Y-%m-%d %H:%M")
+status_raw = re.findall("Stand: .*?\)",text)[0]
+status=helper.get_status(status_raw)
 
 cases = int(data[1].split("m",1)[0])
 
