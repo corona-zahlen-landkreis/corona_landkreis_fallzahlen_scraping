@@ -1,6 +1,6 @@
 # Web-crawler for Corona case numbers in germany (county or sub-county level)
 
-**65** Landkreise/Stadtkreis/Kreisfreihe Städte  are currently supported. 
+**67** Landkreise/Stadtkreis/Kreisfreihe Städte  are currently supported. 
 
 **6** of those also have sub-county (Stadt/Gemeinde) level support.
 
