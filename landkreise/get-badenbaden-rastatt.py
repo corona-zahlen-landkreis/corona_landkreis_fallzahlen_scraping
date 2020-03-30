@@ -23,8 +23,8 @@ text = bs.find(text=re.compile(r"Baden-Baden\..*?Rastatt.*?Stand"))
 
 
 status_pattern = "Stand .* Uhr"
-cases_total_pattern = "Zusammen sind das .* Personen"
-cases_badenbaden_pattern = "In Baden-Baden sind inzwischen.*infiziert"
+cases_total_pattern = "sich inzwischen \d+ Personen"
+cases_badenbaden_pattern = "Davon leben \d+ Erkrankte in Baden-Baden"
 
 
 status_raw=re.findall(status_pattern,text)[0]
