@@ -36,6 +36,7 @@ date_formats = 'Stand: %A, %d.%m.%Y -  %H:%M Uhr', \
                'Stand: %d.%m., %H.%M Uhr', \
                'Stand: %d. %B, %H:%M Uhr', \
                'Stand: %d. %B, %H.%M Uhr', \
+               'Stand: %d. %B, %H Uhr', \
                'Stand: %d.%m., Zeit %H Uhr', \
                'Stand: %d.%m., %H Uhr'
 #date_convert = helper.genfunc_dateformats_parser(datetime.datetime.now(), *date_formats)
@@ -70,12 +71,17 @@ community_matcher = [
 #        except e:
 #            logger.debug(e)
 #            pass
-known_broken_urls=["https://www.kreis-paderborn.de/kreis_paderborn/wirtschaft/Corona-Unterstuetzung-Unternehmen/Corona-Unterstuetzung-Unternehmen.php"]
+known_broken_urls=[
+        "https://www.kreis-paderborn.de/kreis_paderborn/wirtschaft/Corona-Unterstuetzung-Unternehmen/Corona-Unterstuetzung-Unternehmen.php", 
+        "https://www.kreis-paderborn.de/kreis_paderborn/aktuelles/pressemitteilungen/einhaltung-von-quarantaene-hilft-bei-der-eindaemmung-von-corona.php",
+        "https://www.kreis-paderborn.de/kreis_paderborn/aktuelles/pressemitteilungen/corona-befinden-uns-in-der-zweiten-infektionswelle.php",
+        "https://www.kreis-paderborn.de/kreis_paderborn/aktuelles/pressemitteilungen/erster-todesfall-im-Kreis-Paderborn.php"]
+
 for url in urls:
     for community in community_matcher:
         try:
             case_func = lambda bs: helper.extract_case_num_directregex(bs.text, community['regex'],0,url)
-            date_func = lambda bs, default: helper.extract_status_date_directregex(bs.text, date_regex, helper.genfunc_dateformats_parser(default, *date_formats), 0, "%Y-%m-%d", url)
+            date_func = lambda bs, default: helper.extract_status_date_directregex(bs.text, date_regex, helper.genfunc_dateformats_parser(default, *date_formats), 0, "%Y-%m-%dT%H:%M:%S%z", url)
             scrape.scrape(url, community['cid'], case_func, date_func, community['name'], community['parent'])
         except ParsingError as e:
             if url not in known_broken_urls:

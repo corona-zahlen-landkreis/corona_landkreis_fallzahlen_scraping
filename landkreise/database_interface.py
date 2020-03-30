@@ -43,37 +43,36 @@ def add_to_database(uniqueId, status, cases, name="", parentId=None, url=None, d
       for line in csvreader:
         line_count = line_count + 1
         #print(line)
-        if(status == line['Status'] and (line['Source URL'] is None or line['Source URL'] == url):
+        if (status == line['Status'] and (line['Source URL'] is None or line['Source URL'] == url)):
           status_is_in = True
           if(str(cases) == line['Cases']):
             # updating lines with missing URL (ugly -- inline update?)
             exact_duplicate = exact_duplicate or line['Source URL'] == url
-            duplicate_lines << [ line ]
+            duplicate_lines.append(line)
           else:
             # If we import values from country, state, district and community level
             # keeping duplicates helps to identify reporting delays
             # keep date-matches for analysis of variance (TODO: add option to remove or combine date duplicates?)
-            matching_lines << [ line ]
+            matching_lines.append(line)
             csvwriter.writerow(line)
         else:
           csvwriter.writerow(line)
     
-      if status_is_in:
-        #logger.debug("nothing new")
-
-        if exact_duplicate:
+      if status_is_in and exact_duplicate:
+        if len(duplicate_lines) > 1:
           print("Replacing/found %s exact duplicates (date,url,cases): %r" % (len(duplicate_lines), duplicate_lines))
-        # there is already a line with the same status
-        # verify/report value mismatch? (offer merge later, usually just overwrite with correct newer values?)
-        for existing_line in matching_lines:
-          print("status: {}, cases:{}".format(existing_line['Status'], existing_line['Cases'], existing_line['Source URL'], existing_line['Download timestamp']))
-          #if int(existing_line['Cases']) != cases: #redundant check
-          logger.error("{}:{}: Keeping existing colliding value {}={} ({}), but new value is {}={}".format(data_file, line_count, existing_line['Status'], existing_line['Cases'], status, cases))
-      # Always add one entry of the duplicates
-      if parentId == None:
-        print("NEU: {}({}) hat {} Fälle, Stand {}".format(name, uniqueId, cases, status))
       else:
-        print("NEU: {}({} teil von {}) hat {} Fälle, Stand {}".format(name, uniqueId, parentId, cases, status))
+        # Always add one entry of the duplicates
+        if parentId == None:
+          print("NEU: {}({}) hat {} Fälle, Stand {}".format(name, uniqueId, cases, status))
+        else:
+          print("NEU: {}({} teil von {}) hat {} Fälle, Stand {}".format(name, uniqueId, parentId, cases, status))
+      # Report if there are lines with the same status/date but different case number
+      # verify/report value mismatch? (offer merge later, usually just overwrite with correct newer values?)
+      for existing_line in matching_lines:
+        print("status: {}, cases:{}".format(existing_line['Status'], existing_line['Cases'], existing_line['Source URL'], existing_line['Download timestamp']))
+        #if int(existing_line['Cases']) != cases: #redundant check
+        logger.error("{}:{}: Keeping existing colliding value {}={} ({}), but new value is {}={}".format(data_file, line_count, existing_line['Status'], existing_line['Cases'], status, cases))
       csvwriter.writerow({'Status': status, 'Cases': cases, 'Source URL': url, 'Download timestamp': downloadTimeStamp})
         #file.write(status+ ","+str(cases)+','+str(url)+','+str(downloadTimeStamp)+"\n")
       csvfile.close()

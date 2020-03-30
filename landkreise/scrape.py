@@ -65,13 +65,16 @@ def scrape(url, community_id, cases_func, date_func = None, name="", parent_comm
     if options.get('debug'):
         logger.debug(repr(bs.text))
 
-    date = time_stamp() if date_func is None else date_func(bs, default=parse_dateheader(req.headers['Date']))
+    if date_func is None:
+        date = time_stamp()
+    else:
+        date = date_func(bs, default=parse_dateheader(req.headers['Date']))
     cases = cases_func(bs)
     if options.get('debug'):
         logger.debug(str(cases) + " Fälle am " + date)
-    else:
-        download_stamp = req.headers['Date']
-        add_to_database(community_id, date, cases, name, parent_community_id, url, download_stamp)
+
+    download_stamp = req.headers['Date']
+    add_to_database(community_id, date, cases, name, parent_community_id, url, download_stamp)
 
 def request_cache():
     data_dir = pathlib.Path(__file__).parent.joinpath('data')
@@ -88,4 +91,3 @@ def request_url(url,headers=RANDOM_CLIENT_HEADERS,options={}):
         logger.debug('Forcing encoding to: %s' % options.get('forceEncoding'))
         resp.encoding = options.get('forceEncoding')
     return resp
-
