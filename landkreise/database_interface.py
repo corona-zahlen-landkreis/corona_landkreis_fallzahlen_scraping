@@ -52,11 +52,11 @@ def add_to_database(uniqueId, status, cases, name="", parentId=None):
         if parentId == None:
           print("NEU: {}({}) hat {} Fälle, Stand {}".format(name, uniqueId, cases, status))
         else:
-          print("NEU: {}({} teil von {}) hat {} Fälle, Stand {}".format(name, uniqueId, parentId, cases, status))
+          print("NEU: {}({} Teil von {}) hat {} Fälle, Stand {}".format(name, uniqueId, parentId, cases, status))
         file.write(status+ ","+str(cases)+"\n")    
     else:
       if parentId == None:
         print("NEU: {}({}) hat {} Fälle, Stand {}".format(name, uniqueId, cases, status))
       else:
-        print("NEU: {}({} teil von {}) hat {} Fälle, Stand {}".format(name, uniqueId, parentId, cases, status))
+        print("NEU: {}({} Teil von {}) hat {} Fälle, Stand {}".format(name, uniqueId, parentId, cases, status))
       file.write(status+ ","+str(cases)+"\n")
