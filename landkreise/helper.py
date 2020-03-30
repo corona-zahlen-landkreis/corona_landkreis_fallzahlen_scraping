@@ -103,7 +103,7 @@ def extract_status_date(matches_array, input_date_format, match, output_date_for
 def clear_text_of_ambigous_chars(text):
     return text.replace("\xa0", " ").replace("\r","\n")
 
-def get_status(text,occurrence=0):
+def get_status(text,occurrence=0,default_time=datetime.datetime.now()):
     text = clear_text_of_ambigous_chars(text)
     text = remove_chars_from_text(text,["\n"," "])
     
@@ -111,7 +111,9 @@ def get_status(text,occurrence=0):
 
     has_hour=False
     current_find=""
+    current_date=None
     date=None
+    date_format=None
     for regex in date_regexes:
         # try to match against the current regex
         try:
@@ -131,15 +133,18 @@ def get_status(text,occurrence=0):
                 else:
                     date_format = "%Y-%m-%d"
                 # check if there is an hour (if not, do not output any)
-                date = datetime.datetime.strptime(current_find,date_regexes.get(regex)).strftime(date_format)   
+                current_date = datetime.datetime.strptime(current_find,date_regexes.get(regex))
+                date = current_date.strftime(date_format)
                 break;
         except (IndexError,ValueError) as e:
             pass
-        
 
     if not date:
         raise InvalidDateException(text)
-    date = check_and_replace_year(date)       # check if there is a year
+    # TODO parameterize datetime.date.today()
+    if current_date.date().year == 1900:
+      current_date = current_date.replace(year=default_time.date().year)
+      date = current_date.strftime(date_format)
     
     return date
        
