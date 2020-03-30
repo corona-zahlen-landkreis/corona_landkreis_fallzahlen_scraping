@@ -14,7 +14,4 @@ date_func = lambda bs: helper.extract_status_date_directregex(bs.text, date_rege
 date_regex = r"\([ ]*Stand ([0-9\.]+)\)"
 date_format = "%d.%m.%Y"
 
-req = scrape.request_url(main_url)
-bs = BeautifulSoup(req.text, "html.parser")
-
 scrape.scrape(main_url, community_id, case_func, date_func, "Kreis Tuebingen")

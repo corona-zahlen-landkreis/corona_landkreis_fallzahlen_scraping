@@ -15,6 +15,5 @@ date_regex = r"\<meta name=\"date\" content=\"([^\"]+)\"\>"
 date_format = "%Y-%m-%d"
 
 req = scrape.request_url(main_url)
-bs = BeautifulSoup(req.text, "html.parser")
 
 scrape.scrape(main_url, community_id, case_func, date_func, "Kreis Ravensburg")
