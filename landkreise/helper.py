@@ -5,6 +5,8 @@ import locale
 # NOTE: these have to be sorted, with the most general regex at the bottom!
 date_regexes = {
 	"Stand:\d+\.\w+,\d+Uhr" : "Stand:%d.%B,%HUhr",
+        "Stand:\d+\.\w+\d+,\d+Uhr" : "Stand:%d.%B%Y,%HUhr",
+
 
 	"Stand:\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand:%d.%m.%Y,%H.%MUhr",
 	"Stand\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand%d.%m.%Y,%H.%MUhr",
@@ -87,7 +89,7 @@ def get_status(text,occurrence=0):
                 # check if there is an hour (if not, do not output any)
                 date = datetime.datetime.strptime(current_find,date_regexes.get(regex)).strftime(date_format)   
                 break;
-        except IndexError:
+        except (IndexError,ValueError) as e:
             pass
         
 

@@ -30,8 +30,8 @@ for row in rows:
 status_raw = re.findall("Stand: .* Uhr", bs.getText())[0]
 status = helper.get_status(status_raw)
 
-cases_stadt = data[0][1]
-cases_kreis = data[1][1]
+cases_stadt = helper.get_number_only(data[0][1])
+cases_kreis = helper.get_number_only(data[1][1])
 
 add_to_database("06611000", status, cases_stadt, "Stadt Kassel")
 add_to_database("06633", status, cases_kreis, "Kreis Kassel")
