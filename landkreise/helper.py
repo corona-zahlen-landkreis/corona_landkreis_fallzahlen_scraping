@@ -6,6 +6,8 @@ import locale
 date_regexes = {
 	"Stand:\d+\.\w+,\d+Uhr" : "Stand:%d.%B,%HUhr",
 	"Stand:\d+\.\d+\.,\d+:\d+Uhr":"Stand:%d.%m.,%H:%MUhr",
+        "Stand\d+\.\d+\.,\d+:\d+Uhr":"Stand%d.%m.,%H:%MUhr",
+
         "Stand:\d+\.\w+\d+,\d+Uhr" : "Stand:%d.%B%Y,%HUhr",
 
 
@@ -14,7 +16,7 @@ date_regexes = {
         "Stand\d+\.\d+.\d+,\d+:\d+Uhr" : "Stand%d.%m.%Y,%H:%MUhr",
     
     
-    "Stand\d+\.\w+,\d+Uhr" : "Stand%d.%B,%HUhr",
+	"Stand\d+\.\w+,\d+Uhr" : "Stand%d.%B,%HUhr",
 
 	"Stand:\d+\.\w+\d+;\d+\.\d+Uhr" : "Stand:%d.%B%Y;%H.%MUhr",
 
