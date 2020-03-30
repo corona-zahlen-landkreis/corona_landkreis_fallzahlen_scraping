@@ -7,20 +7,23 @@ import re
 import locale
 locale.setlocale(locale.LC_TIME, "de_DE.utf-8")
 
+import scrape
+from helper import *
 from database_interface import *
 
 main_url = "https://www.enzkreis.de/Quicknavigation/Start/Gesundheitsamt-informiert-%C3%BCber-das-neue-Coronavirus-SARS-CoV-2-Fast-50-best%C3%A4tigte-F%C3%A4lle-in-Pforzheim-und-im-Enzkreis.php?object=tx,2891.6&ModID=7&FID=2891.1978.1"
 
-req = requests.get(main_url)
+req = scrape.request_url(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
-cases_pforzheim_pattern = "Aktuell gibt es in Pforzheim [0-9]+ bestätigte Corona-Fälle"
-cases_enzkreis_pattern = "im Enzkreis [0-9]+"
+cases_pforzheim_pattern = "Pforzheim gibt es \d+"
+cases_enzkreis_pattern = "im Enzkreis \d+"
 
-text=bs.getText()
+text=clear_text_of_ambigous_chars(bs.getText())
+text=remove_chars_from_text(text,["\n"])
 
 status_raw = re.findall("Stand: .* Uhr\)", text)[0]
-status= datetime.datetime.strptime(status_raw, 'Stand: %d.%m.%Y, %H:%M Uhr)').strftime("%Y-%m-%d %H:%M:%S")
+status= get_status(status_raw)
 
 
 cases_pforzheim_raw = re.findall(cases_pforzheim_pattern,text)[0]
