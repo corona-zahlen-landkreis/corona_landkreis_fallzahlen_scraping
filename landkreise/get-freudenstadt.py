@@ -17,11 +17,11 @@ main_url = "https://www.landkreis-freudenstadt.de/385534.html"
 req = scrape.request_url(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
-cases_pattern = "auf [0-9]+ erhöht"
+cases_pattern = "steigt auf \d+"
 
 text = helper.clear_text_of_ambigous_chars(bs.getText())
 
-status_raw = re.findall("\([0-9]+.*\) eingegangenen", text)[0]
+status_raw = re.findall("\(\d+\. \w+ \d+\)", text)[0]
 status= helper.get_status(status_raw)
 
 
