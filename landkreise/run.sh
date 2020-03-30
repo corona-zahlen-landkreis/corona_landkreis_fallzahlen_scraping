@@ -13,8 +13,7 @@ python get-warendorf-kreis.py
 python get-harburg-kreis.py
 python get-ostalbkreis.py
 python get-heidenheim.py
-python get-stadtkreisulm.py
-python get-albdonaukreis.py
+python get-albdonaukreis-stadtkreisulm.py
 python get-badenbaden-rastatt.py
 python get-zollernalbkreis.py
 python get-schwaebischhall.py

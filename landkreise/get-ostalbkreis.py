@@ -19,7 +19,7 @@ row = table.findAll(lambda tag: tag.name=='tr')[1].find_all('td')
 
 
 cases = row[0].getText()
-status_raw = row[3].getText()
+status_raw = row[4].getText()
 
 status= helper.get_status(status_raw)
 
