@@ -5,7 +5,7 @@ import datetime
 import re
 
 import scrape
-import helper
+from helper import *
 from database_interface import *
 
 main_url = "https://www.landkreis-goeppingen.de/start/_Aktuelles/coronavirus.html"
@@ -13,11 +13,14 @@ main_url = "https://www.landkreis-goeppingen.de/start/_Aktuelles/coronavirus.htm
 req=scrape.request_url(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
+text=bs.getText()
+text=clear_text_of_ambigous_chars(text)
+text=remove_chars_from_text(text,["\n"])
 
-cases_pattern = "Bestätigte Corona-Fälle im Landkreis Göppingen: [0-9]+"
+cases_pattern = "Bestätigte Corona-Fälle: \d+"
 
-status_raw = bs.findAll(text=re.compile("Stand "))[0]
-status = helper.get_status(status_raw)
+status_raw = re.findall("Stand: .*? Uhr",text)[0]
+status = get_status(status_raw)
 
 cases_raw = bs.find(text=re.compile(cases_pattern))
 

@@ -4,30 +4,45 @@ import locale
 
 # NOTE: these have to be sorted, with the most general regex at the bottom!
 date_regexes = {
-	"Stand:\d+\.\w+,\d+Uhr" : "Stand:%d.%B,%HUhr",
+# Stand:14.01.,16:02Uhr
 	"Stand:\d+\.\d+\.,\d+:\d+Uhr":"Stand:%d.%m.,%H:%MUhr",
+# Stand14.01.,16:02Uhr
         "Stand\d+\.\d+\.,\d+:\d+Uhr":"Stand%d.%m.,%H:%MUhr",
-
+# Stand:14.Januar2020,16Uhr
         "Stand:\d+\.\w+\d+,\d+Uhr" : "Stand:%d.%B%Y,%HUhr",
 
-
+# Stand:14.01.2020,16.20Uhr
 	"Stand:\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand:%d.%m.%Y,%H.%MUhr",
+# Stand:14.01.2020,16:20Uhr
+        "Stand:\d+\.\d+.\d+,\d+:\d+Uhr" : "Stand:%d.%m.%Y,%H:%MUhr",
+
+# Stand14.01.2020,16.20Uhr
 	"Stand\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand%d.%m.%Y,%H.%MUhr",
+# Stand14.01.2020,16:20Uhr
         "Stand\d+\.\d+.\d+,\d+:\d+Uhr" : "Stand%d.%m.%Y,%H:%MUhr",
-    
-    
+
+# Stand:14.Januar,14Uhr
+        "Stand:\d+\.\w+,\d+Uhr" : "Stand:%d.%B,%HUhr",
+# Stand14.Januar,14Uhr
 	"Stand\d+\.\w+,\d+Uhr" : "Stand%d.%B,%HUhr",
 
+# Stand:14.Januar2020;16.20Uhr
 	"Stand:\d+\.\w+\d+;\d+\.\d+Uhr" : "Stand:%d.%B%Y;%H.%MUhr",
 
-
+# mitStandvonFreitag,14.Januar,16.20Uhr
 	"mitStandvon\w+,\d+\.\w+,\d+\.\d+Uhr":"mitStandvon%A,%d.%B,%H.%MUhr",
 
+# Stand14.01.2020-16:02Uhr
 	"Stand\d+\.\d+\.\d+-\d+:\d+Uhr":"Stand%d.%m.%Y-%H:%MUhr",
+# Stand14.01.2020
         "Stand\d+.\d+.\d+" : "Stand%d.%m.%Y",
+# Stand:Freitag,14.Januar2020
         "Stand:\w+,\d+\.\w+\d+": "Stand:%A,%d.%B%Y",
+# 14.01.2020
 	"\d+\.\d+\.\d+":"%d.%m.%Y",
+# 14.Januar2020
 	"\d+\.\w+\d+":"%d.%B%Y",
+# 14. Januar
 	"\d+\.\w+":"%d.%B"
 
     }
