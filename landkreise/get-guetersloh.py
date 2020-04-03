@@ -10,6 +10,8 @@ import re
 #reload(sys) # only on some installations ;-)
 #sys.setdefaultencoding('utf-8') # only on some installations ;-)
 
+import scrape
+import helper
 # for some german month names, e.g. März
 import locale
 locale.setlocale(locale.LC_ALL, "de_DE.utf-8")
@@ -49,7 +51,7 @@ community = {
 }
 
 def getPage(url, parsed):
-    req = requests.get(url)
+    req = scrape.request_url(url)
     text = req.text
     if parsed:
         text = BeautifulSoup(text, "html.parser")
@@ -58,18 +60,11 @@ def getPage(url, parsed):
     
 
 def getStatusDate(string):
-    status_raw = re.findall("zum Stand: (.*?) Uhr", string)
+    status_raw = re.findall("zum Stand .*? Uhr", string)
+
     if len(status_raw) == 1:
-        if re.match("\d+\. [A-Za-z0-9äöü]+\, \d+\:\d+", status_raw[0]):
-            statusDate = datetime.datetime.strptime(status_raw[0], '%d. %B, %H:%M')
-        elif re.match("\d+\. [A-Za-z0-9äöü]+\, \d+\.\d+", status_raw[0]):
-            statusDate = datetime.datetime.strptime(status_raw[0], '%d. %B, %H.%M')
-        elif re.match("\d+\. [A-Za-z0-9äöü]+\, \d+", status_raw[0]):
-            statusDate = datetime.datetime.strptime(status_raw[0], '%d. %B, %H')
-        statusDate = statusDate.replace(year = 2020)
+        statusDate = helper.get_status(status_raw[0].replace("zum Stand ",""))
         return statusDate
-    elif len(status_raw) > 1:
-        print("have more than one 'zum Stand: .*? Uhr': " + str(len(status_raw)))    
 
 def findNumber(pattern, string):
     number_raw = re.findall(pattern, string)
@@ -90,7 +85,7 @@ for one_teaser in teaser_raw:
             statusDate = getStatusDate(one_meta_description[0])
 
             if statusDate != None:
-                status = statusDate.strftime("%Y-%m-%d %H:%M")    
+                status = statusDate
 
                 cases = findNumber(cases_pattern, one_meta_description[0])
                 recovered = findNumber(recover_pattern, one_meta_description[0])
