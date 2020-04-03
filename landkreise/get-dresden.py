@@ -26,7 +26,7 @@ def get_dresden():
     features = jsn['features']
     current_feature = features[len(features)-1]
     status = datetime.datetime.strptime(current_feature['attributes']['Datum'],
-                                        '%d.%m.%y').strftime("20%y-%m-%d 12:00")
+                                        '%d.%m.%Y').strftime("%Y-%m-%d")
     cases = int(current_feature['attributes']['Fallzahl'])
 
     # debugging: print("14612000", status, cases, "Stadt Dresden")
