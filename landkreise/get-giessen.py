@@ -1,12 +1,21 @@
+from bs4 import BeautifulSoup
+
 import scrape
 import helper
+from database_interface import *
 
 url = "https://www.lkgi.de/gesundheit-und-soziales/3060-gesundheitsamt-informiert-br-ueber-coronavirus"
-#  (Stand 21. März) 
-date_regex = r"wurden \(Stand \d\d\. [^0-9]+\) insgesamt"
-date_func = lambda bs: helper.extract_status_date_directregex(bs.text, date_regex, "wurden (Stand %d. %B) insgesamt", 0)
 
-case_regex = r"insgesamt \d+ Fälle des Coronavirus" 
-case_func = lambda bs: helper.extract_case_num_directregex(bs.text, case_regex, 0)
+req = scrape.request_url(url)
+bs = BeautifulSoup(req.text, 'html.parser')
 
-scrape.scrape(url, "06531", case_func, date_func, name="Gießen")
+table = bs.find('table')
+
+data = helper.get_table(table)
+data.pop(0)
+
+for row in data:
+  status = helper.get_status(row[0])
+  cases = int(row[1])
+  add_to_database("06531", status, cases, name="Kreis Gießen")
+
