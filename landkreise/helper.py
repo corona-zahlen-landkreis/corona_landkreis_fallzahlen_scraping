@@ -84,7 +84,7 @@ def get_status(text,occurrence=0):
     text = clear_text_of_ambigous_chars(text)
     text = remove_chars_from_text(text,["\n"," "])
     
-    äprint(text)
+    #print(text)
 
     has_hour=False
     current_find=""

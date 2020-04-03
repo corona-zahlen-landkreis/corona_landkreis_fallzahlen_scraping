@@ -20,7 +20,7 @@ cases_pattern = "[0-9]+ Fälle"
 
 text=bs.getText()
 
-status_raw = re.findall("Stand .* Uhr",text)[0]
+status_raw = re.findall("Stand.*Uhr",text)[0]
 status= helper.get_status(status_raw)
 
 
