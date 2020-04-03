@@ -10,13 +10,13 @@ import scrape
 
 DISTRICT_UID = "09184"
 
-main_url = "https://www.landkreis-muenchen.de/themen/verbraucherschutz-gesundheit/gesundheit/fallzahlen-nach-gemeinden/"
+main_url = "https://www.landkreis-muenchen.de/themen/verbraucherschutz-gesundheit/gesundheit/coronavirus/fallzahlen/"
 
 req = scrape.request_url(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
 status_pattern = "\(Stand: .*?\)"
-cases_pattern = "[0-9]+ bestätigte Erkrankungsfälle"
+cases_pattern = "[0-9]+ bestätigte Infektionsfälle"
 
 full_text = helper.clear_text_of_ambigous_chars(bs.getText())
 
