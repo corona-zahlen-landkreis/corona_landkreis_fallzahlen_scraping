@@ -12,7 +12,7 @@ def get_recent_press_msg(bs):
 
 def get_cases(bs):
     msg = str(get_recent_press_msg(bs))
-    return helper.extract_case_num(msg, "Zahl der Infizierten:")
+    return helper.extract_case_num(msg, "Anzahl der bestätigten Fälle: ")
 
 def get_date(bs):
     msg = str(get_recent_press_msg(bs))

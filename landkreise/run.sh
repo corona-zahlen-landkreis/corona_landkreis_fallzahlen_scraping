@@ -7,6 +7,7 @@ if type -p python3; then
 else
 	echo "WARNING: scripts & libraries require python3!"
 fi
+python get-bodenseekreis.py
 python get-ravensburg-kreis.py
 python get-tuebingen-kreis.py
 python get-warendorf-kreis.py
