@@ -10,6 +10,8 @@ date_regexes = {
         "Stand\d+\.\d+\.,\d+:\d+Uhr":"Stand%d.%m.,%H:%MUhr",
 # Stand:14.Januar2020,16Uhr
         "Stand:\d+\.\w+\d+,\d+Uhr" : "Stand:%d.%B%Y,%HUhr",
+#Stand1.April2020,16:30Uhr
+        "Stand\d+\.\w+\d+,\d+:\d+Uhr" : "Stand%d.%B%Y,%H:%MUhr",
 
 # Stand:14.01.2020,16.20Uhr
 	"Stand:\d+\.\d+.\d+,\d+\.\d+Uhr" : "Stand:%d.%m.%Y,%H.%MUhr",
@@ -25,6 +27,7 @@ date_regexes = {
         "Stand:\d+\.\w+,\d+Uhr" : "Stand:%d.%B,%HUhr",
 # Stand14.Januar,14Uhr
 	"Stand\d+\.\w+,\d+Uhr" : "Stand%d.%B,%HUhr",
+
 
 # Stand:14.Januar2020;16.20Uhr
 	"Stand:\d+\.\w+\d+;\d+\.\d+Uhr" : "Stand:%d.%B%Y;%H.%MUhr",
