@@ -1,18 +1,26 @@
-
+from bs4 import BeautifulSoup
 import re
 import scrape
 import helper
+from database_interface import *
+
+main_url = "https://www.minden-luebbecke.de/Startseite/Informationen-zum-Coronavirus/index.php?La=1&object=tx,2832.3066.1&kat=&kuo=2&sub=0"
 
 
-def find_cases_in_table(bs):
-    table = bs.findAll('tbody')[0]
-    row = table.findAll('tr')[3]
-    cell = re.findall(r'\d+', str(row.findAll('strong')[0]))[0]
-    return int(cell)
+req = scrape.request_url(main_url)
+bs = BeautifulSoup(req.text, 'html.parser')
 
-main_url = "https://www.minden-luebbecke.de/Startseite/Informationen-zum-Coronavirus/index.php?La=1&object=tx,2832.3003.1&kat=&kuo=2&sub=0"
+table = bs.find('table')
+data = helper.get_table(table)
 
-# Aktuelle Fallzahlen (Stand 22.3.2020, 11 Uhr)
-date_func = lambda bs: helper.extract_status_date(bs, "Aktuelle Fallzahlen \(", "Aktuelle Fallzahlen (Stand %d.%m.%Y, %H Uhr)")  
-scrape.scrape(main_url, "05770", find_cases_in_table, date_func, name="Minden-Luebbecke")
+data_line = data[2]
+
+cases = data_line[0]
+healed= data_line[1]
+deaths = data_line[2]
+
+status_raw = re.findall("\(\d+\.\d+\., \d+ Uhr\)",bs.text)[0].replace("(","").replace(")","")
+status = helper.get_status(status_raw)
+
+add_to_database("05770", status, cases, name="Minden-Luebbecke")
 

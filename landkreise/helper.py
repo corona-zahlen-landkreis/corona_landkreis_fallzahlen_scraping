@@ -46,7 +46,9 @@ date_regexes = {
 # 14.Januar2020
 	"\d+\.\w+\d+":"%d.%B%Y",
 # 14. Januar
-	"\d+\.\w+":"%d.%B"
+	"\d+\.\w+":"%d.%B",
+#5.4.,11Uhr
+	"\d+\.\d+\.,\d+Uhr":"%d.%m.,%HUhr"
 
     }
 
