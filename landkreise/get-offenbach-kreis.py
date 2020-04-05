@@ -17,9 +17,9 @@ req = scrape.request_url(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
 
 text = bs.getText()
-f = open("debug.txt", "w")
-f.write(text)
-f.close()
+# f = open("debug.txt", "w")
+# f.write(text)
+# f.close()
 
 # result:
 # SARS-CoV-2 im Kreis
