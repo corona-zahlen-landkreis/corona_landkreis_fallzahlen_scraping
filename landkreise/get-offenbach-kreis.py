@@ -47,4 +47,4 @@ status = get_status(m.group(4))
 # print("cases: ", cases)
 # print("status: ", status)
 
-add_to_database("06438000", status, cases, "Kreis Offenbach")
+add_to_database("06438", status, cases, "Kreis Offenbach")
