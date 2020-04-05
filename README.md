@@ -1,6 +1,6 @@
 # Web-crawler for Corona case numbers in germany (county or sub-county level)
 
-**67** Landkreise/Stadtkreis/Kreisfreihe Städte  are currently supported. 
+**69** Landkreise/Stadtkreis/Kreisfreihe Städte  are currently supported. 
 
 **6** of those also have sub-county (Stadt/Gemeinde) level support.
 
@@ -36,10 +36,10 @@ Scraper that also generates community level output:
 python3 landkreise/get-soest.py
 ```
 
-Newer abstracted scraper (depend on scraper.py):
+Newer abstracted scraper (depend on scrape.py):
 ```
 # SCRAPER debug mode/logging can be enabled as follows
-SCRAPER_DEBUG=yes python3 landkreise/get-fulda.py
+SCRAPER_DEBUG=yes python3 landkreise/get-aachen.py
 ``` 
 
 The result data is saved in `landkreise/data/` as CSV files.
