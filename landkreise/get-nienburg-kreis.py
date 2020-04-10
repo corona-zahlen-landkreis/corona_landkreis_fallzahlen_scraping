@@ -26,4 +26,4 @@ unix_timestamp /= 1000
 #convert unix to date
 status = datetime.datetime.fromtimestamp(unix_timestamp).strftime("%Y-%m-%d")
 
-add_to_database("03256022", status, cases, "Landkreis Nienburg/Weser")
+add_to_database("03256", status, cases, "Landkreis Nienburg/Weser")
