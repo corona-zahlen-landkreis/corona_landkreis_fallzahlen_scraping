@@ -49,6 +49,8 @@ date_regexes = {
         "Stand:\w+,\d+\.\w+\d+": "Stand:%A,%d.%B%Y",
 # Donnerstag, 16. April, 11.00 Uhr
 	"\w+,\d+\.\w+,\d+\.\d+Uhr":"%A,%d.%B,%H.%MUhr",
+# 14.01.2020,15.30Uhr
+        "\d+\.\d+\.\d+,\d+\.\d+Uhr":"%d.%m.%Y,%H.%MUhr",
 # 14.01.2020
 	"\d+\.\d+\.\d+":"%d.%m.%Y",
 # 14.Januar2020
