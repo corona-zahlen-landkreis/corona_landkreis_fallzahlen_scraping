@@ -24,10 +24,13 @@ status_raw = bs.findAll(text=re.compile("Stand"))[0]
 status= datetime.datetime.strptime(status_raw, 'Aktuelle Informationen zum Coronavirus (Stand: %d.%m.%Y, %H:%M Uhr)').strftime("%Y-%m-%d %H:%M:%S")
 
 
-cases_raw=bs.findAll(text=re.compile("Es gibt aktuell"))[0]
-cases = int(re.findall(r'[0-9]+', cases_raw)[0])
+text_match = re.compile("Was gibt’s neues?")
+text_position = bs.find(text=text_match)
+table = text_position.findNext('table')
 
+data_total=helper.get_table(table)
 
+cases = helper.get_number_only(data_total[1][0])
 
 community = {
     # heidenheim an der brenz
