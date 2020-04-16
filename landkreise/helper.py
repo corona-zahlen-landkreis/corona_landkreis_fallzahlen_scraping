@@ -8,6 +8,10 @@ date_regexes = {
 	"Stand:\d+\.\d+\.,\d+:\d+Uhr":"Stand:%d.%m.,%H:%MUhr",
 # Stand14.01.,16:02Uhr
         "Stand\d+\.\d+\.,\d+:\d+Uhr":"Stand%d.%m.,%H:%MUhr",
+
+# Stand14.01;16:02Uhr
+        "Stand\d+\.\d+;\d+:\d+Uhr":"Stand%d.%m;%H:%MUhr",
+
 # Stand:14.Januar2020,16Uhr
         "Stand:\d+\.\w+\d+,\d+Uhr" : "Stand:%d.%B%Y,%HUhr",
 #Stand1.April2020,16:30Uhr
