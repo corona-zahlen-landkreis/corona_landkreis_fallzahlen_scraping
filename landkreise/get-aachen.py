@@ -23,7 +23,7 @@ cases_staedteregion_pattern = "Aktuell [0-9]+ bestätigte Coronafälle in der St
 text=bs.getText()
 
 
-status_raw = re.findall("\w+, \d+\.\d+\.\d+, \d+ Uhr",text)[0]
+status_raw = re.findall("\w+, \d+\..*?\d+\.\d+ Uhr",text)[0]
 status= get_status(status_raw)
 
 cases_aachen_raw = re.findall(cases_aachen_pattern,text)[0]
