@@ -19,12 +19,14 @@ main_url = "https://www.baden-baden.de/buergerservice/news/corona-aktuell_9635/"
 
 req = scrape.request_url(main_url)
 bs = BeautifulSoup(req.text, "html.parser")
-text = bs.find(text=re.compile(r"Baden-Baden.*?Rastatt.*?Stand")).replace("\n","")
 
+text = bs.getText().replace("\n","")
+
+text = helper.clear_text_of_ambigous_chars(text)
 
 status_pattern = "Stand .* Uhr"
-cases_total_pattern = "(sich inzwischen \d+ Personen|insgesamt \d+ Personen)"
-cases_badenbaden_pattern = "(Davon leben \d+ Erkrankte in Baden-Baden|\d+ davon in Baden-Baden)"
+cases_total_pattern = "(sich inzwischen \d+ Personen|insgesamt \d+ Personen|sind insgesamt  \d+ Corona-Infizierte gemeldet)"
+cases_badenbaden_pattern = "(Davon leben \d+ Erkrankte in Baden-Baden|\d+ davon in Baden-Baden|in Baden-Baden insgesamt \d+)"
 
 
 status_raw=re.findall(status_pattern,text)[0]
