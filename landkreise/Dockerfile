@@ -30,6 +30,7 @@ VOLUME /landkreise
 # - add ~/.local/bin for pip --user
 ENV PATH="/home/corona/.local/bin:${PATH}"
 # - install dependencies
-RUN pip3 install --user bs4 requests cachecontrol[filecache] lockfile tqdm
+ADD requirements.txt /tmp/
+RUN pip3 install --user --requirement /tmp/requirements.txt
 
 CMD bash

@@ -1,0 +1,5 @@
+bs4==0.0.1
+CacheControl==0.12.6
+lockfile==0.12.2
+requests==2.24.0
+tqdm==4.46.1
