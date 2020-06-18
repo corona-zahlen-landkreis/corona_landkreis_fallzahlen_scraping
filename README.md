@@ -54,24 +54,21 @@ community data (aggregates to distrcit - hopefully):
 ```landkreise/data/0<districtId>/<communityId>.csv```
 
 ### Requirements:
-  * Python3
-    * requests (often included)
-    * CacheControl[filecache] (persistent cache does not work yet)
-      * lockfile
-    * beautiful soup 4
-    * running all scrapers tqdm
 
-pip3 line:
-```
-pip3 install requests bs4 cachecontrol[filecache] lockfile tqdm
-```
+* Python3
+* Dependencies from `requirements.txt` which can be install as follows:
 
-Debian/Ubuntu packages:
-```
-  sudo apt-get install python3 python3-bs4 python3-cachecontrol python3-lockfile python3-tqdm
-```
+  - by using pip:
+  ```
+  pip3 install -r requirements.txt
+  ```
 
-  * Makefile for Docker container also exists
+  - by using Debian/Ubuntu packages:
+  ```
+  sudo apt install python3 python3-bs4 python3-cachecontrol python3-lockfile python3-tqdm
+  ```
+
+Alternatively, you can use the Dockerfile to build a Docker container which has everything already installed.
 
 ### Writing / Mainting a scraper
 
