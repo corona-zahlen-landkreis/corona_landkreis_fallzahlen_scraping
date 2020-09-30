@@ -8,7 +8,7 @@
 
 ## Inspiration
 RKI's and state's data is most of the times multiple days old
-The official data at the RKI and the federal states are sometimes several days old. What could be more obvious than to retrieve this data directly from the websites of the administrative districts (county)? There they are "directly at the source" and most up-to-date.
+The official data at the RKI and the federal states are sometimes several days old. What could be more obvious than to retrieve this data directly from the websites of the administrative districts (county)? Then they are "directly at the source" and most up-to-date.
 
 In addition, there is a crowdsource website on which current case numbers per county (including source) can be given. (currently in the works)
 
@@ -24,7 +24,7 @@ Search the website with press releases from your district (or neighboring distri
 ## How to start the included API service
 
 [See API README](api/README.md)
-Website where people can choose a district, enter the current case number (including status date) and source. (and a backend which forwards these requests with the possibility to access these data and include it in the data set.)
+Website where people can choose a district, enter the current number of cases (including status date) and source. (and a backend which forwards these requests with the possibility to access these data and include it in the data set.)
 
 ## How to use the web-crawler - scraper
 
