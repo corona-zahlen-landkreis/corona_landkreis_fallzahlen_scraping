@@ -1,6 +1,6 @@
 # Web-crawler für Corona-Fallzahlen (Landkreise oder sogar Gemeinden)
 
-## Inspiration
+## Inspiration for web-crawler
 Die offiziellen Daten beim RKI und den Bundesländern sind zum Teil mehrere Tag alt. Was gibt es naheliegenderes, als diese Daten direkt von den Webseiten der Landkreise abzufragen? Dort sind sie "direkt an der Quelle" und am aktuellsten.
 
 Dazu kommt eine Crowdsource-Webseite, auf der aktuelle Fallzahlen pro Landkreis (inkl Quelle) angegeben werden können
